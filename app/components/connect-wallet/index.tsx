@@ -2,6 +2,7 @@
 import React from "react";
 import { useAccount, useDisconnect } from "wagmi";
 import ConnectWalletModal from "./connect-wallet-modal";
+import { Button } from "@mui/material";
 
 const ConnectWalletButton = () => {
   const account = useAccount();
@@ -15,20 +16,9 @@ const ConnectWalletButton = () => {
         setOpen={(shouldOpen) => setOpenConnectModal(shouldOpen)}
       />
       {account.isConnected ? (
-        <button
-          onClick={() => disconnect()}
-          className="border py-2 px-4 border-white rounded-xl"
-        >
-          Disconnect
-        </button>
+        <Button onClick={() => disconnect()}>Disconnect</Button>
       ) : (
-        <button
-          onClick={() => setOpenConnectModal(true)}
-          className="border py-2 px-4 border-white rounded-xl"
-          disabled={account.isConnecting}
-        >
-          Connect
-        </button>
+        <Button onClick={() => setOpenConnectModal(true)}>Connect</Button>
       )}
     </>
   );

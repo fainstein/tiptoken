@@ -3,6 +3,10 @@ import React from "react";
 import { WagmiProvider } from "wagmi";
 import { config } from "./ethereum/wagmi/config";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ThemeProvider } from "@mui/material/styles";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
+import theme from "./ui/theme";
 
 const Wrappers = ({
   children,
@@ -13,7 +17,13 @@ const Wrappers = ({
 
   return (
     <WagmiProvider config={config}>
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider theme={theme}>
+          <LocalizationProvider dateAdapter={AdapterLuxon}>
+            {children}
+          </LocalizationProvider>
+        </ThemeProvider>
+      </QueryClientProvider>
     </WagmiProvider>
   );
 };

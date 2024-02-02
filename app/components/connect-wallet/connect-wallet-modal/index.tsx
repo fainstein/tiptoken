@@ -1,5 +1,6 @@
+import { Box, Button, Modal } from "@mui/material";
 import React from "react";
-import { Connector, useAccount, useConnect } from "wagmi";
+import { Connector, useConnect } from "wagmi";
 
 interface ConnectWalletModalProps {
   open: boolean;
@@ -16,43 +17,40 @@ const WalletOption = ({
   const [ready, setReady] = React.useState(false);
 
   React.useEffect(() => {
-    (async () => {
+    const getReadyConnects = async () => {
       const provider = await connector.getProvider();
       setReady(!!provider);
-    })();
+    };
+    getReadyConnects();
   }, [connector]);
 
   return (
-    <button
-      disabled={!ready}
-      onClick={onClick}
-      className="border py-2 px-4 border-white rounded-xl"
-    >
+    <Button disabled={!ready} onClick={onClick}>
       {connector.name}
-    </button>
+    </Button>
   );
 };
 
 const ConnectWalletModal = ({ open, setOpen }: ConnectWalletModalProps) => {
   const { connectors, connect } = useConnect();
 
+  const onClickConnector = (connector: Connector) => {
+    connect({ connector });
+    setOpen(false);
+  };
+
   return (
-    open && (
-      <div
-        onClick={() => setOpen(false)}
-        className="absolute top-0 left-0 w-screen h-screen bg-transparent backdrop-blur-sm z-10 flex justify-center items-center"
-      >
-        <div className="p-4 max-w-2xl max-h-full flex flex-col gap-2 bg-slate-900">
-          {connectors.map((connector) => (
-            <WalletOption
-              key={connector.uid}
-              connector={connector}
-              onClick={() => connect({ connector })}
-            />
-          ))}
-        </div>
-      </div>
-    )
+    <Modal open={open} onClose={() => setOpen(false)}>
+      <Box>
+        {connectors.map((connector) => (
+          <WalletOption
+            key={connector.uid}
+            connector={connector}
+            onClick={() => onClickConnector(connector)}
+          />
+        ))}
+      </Box>
+    </Modal>
   );
 };
 

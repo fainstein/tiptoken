@@ -1,15 +1,20 @@
 "use client";
+import { Box, Typography } from "@mui/material";
 import ConnectWalletButton from "../connect-wallet";
 import React from "react";
 
 const Navigation = () => {
   return (
-    <nav className="flex justify-between p-6 items-center bg-transparent backdrop-blur-sm w-full fixed">
-      <h2 className="opacity-100">Tip Token</h2>
-      <div className="flex gap-2">
-        <ConnectWalletButton />
-      </div>
-    </nav>
+    <Box
+      component="nav"
+      display="flex"
+      justifyContent="space-between"
+      alignItems="center"
+      padding={6}
+    >
+      <Typography variant="h4">Tip Token</Typography>
+      <ConnectWalletButton />
+    </Box>
   );
 };
 
