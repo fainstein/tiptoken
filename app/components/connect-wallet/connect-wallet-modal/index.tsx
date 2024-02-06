@@ -1,6 +1,6 @@
-import { Box, Button, Modal } from "@mui/material";
+import { Box, Button, Dialog } from "@mui/material";
 import React from "react";
-import { Connector, useConnect } from "wagmi";
+import { Connector, useAccount, useConnect, useDisconnect } from "wagmi";
 
 interface ConnectWalletModalProps {
   open: boolean;
@@ -17,11 +17,11 @@ const WalletOption = ({
   const [ready, setReady] = React.useState(false);
 
   React.useEffect(() => {
-    const getReadyConnects = async () => {
+    const getReadyConnector = async () => {
       const provider = await connector.getProvider();
       setReady(!!provider);
     };
-    getReadyConnects();
+    getReadyConnector();
   }, [connector]);
 
   return (
@@ -33,15 +33,28 @@ const WalletOption = ({
 
 const ConnectWalletModal = ({ open, setOpen }: ConnectWalletModalProps) => {
   const { connectors, connect } = useConnect();
+  const { isConnected } = useAccount();
+  const { disconnect } = useDisconnect();
 
   const onClickConnector = (connector: Connector) => {
-    connect({ connector });
     setOpen(false);
+    connect({ connector });
+  };
+
+  const onClickDisconnect = () => {
+    setOpen(false);
+    disconnect();
   };
 
   return (
-    <Modal open={open} onClose={() => setOpen(false)}>
-      <Box>
+    <Dialog open={open} onClose={() => setOpen(false)}>
+      <Box
+        display="flex"
+        flexDirection="column"
+        gap={3}
+        alignItems="center"
+        p={5}
+      >
         {connectors.map((connector) => (
           <WalletOption
             key={connector.uid}
@@ -49,8 +62,13 @@ const ConnectWalletModal = ({ open, setOpen }: ConnectWalletModalProps) => {
             onClick={() => onClickConnector(connector)}
           />
         ))}
+        {isConnected && (
+          <Button variant="contained" onClick={onClickDisconnect}>
+            Disconnect
+          </Button>
+        )}
       </Box>
-    </Modal>
+    </Dialog>
   );
 };
 

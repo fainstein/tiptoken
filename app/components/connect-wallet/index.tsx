@@ -1,12 +1,12 @@
 "use client";
 import React from "react";
-import { useAccount, useDisconnect } from "wagmi";
+import { useAccount } from "wagmi";
 import ConnectWalletModal from "./connect-wallet-modal";
-import { Button } from "@mui/material";
+import { Button, CircularProgress } from "@mui/material";
+import { trimAddress } from "@/app/utils/address";
 
 const ConnectWalletButton = () => {
-  const account = useAccount();
-  const { disconnect } = useDisconnect();
+  const { isConnected, isConnecting, address } = useAccount();
   const [openConnectModal, setOpenConnectModal] = React.useState(false);
 
   return (
@@ -15,11 +15,9 @@ const ConnectWalletButton = () => {
         open={openConnectModal}
         setOpen={(shouldOpen) => setOpenConnectModal(shouldOpen)}
       />
-      {account.isConnected ? (
-        <Button onClick={() => disconnect()}>Disconnect</Button>
-      ) : (
-        <Button onClick={() => setOpenConnectModal(true)}>Connect</Button>
-      )}
+      <Button onClick={() => setOpenConnectModal(true)}>
+        {isConnected && address ? trimAddress({ address }) : "Connect"}
+      </Button>
     </>
   );
 };

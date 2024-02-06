@@ -2,6 +2,7 @@
 import { createTheme } from "@mui/material/styles";
 
 import { Roboto } from "next/font/google";
+import { components } from "./components";
 
 const roboto = Roboto({
   weight: ["300", "400", "500", "700"],
@@ -14,6 +15,7 @@ const theme = createTheme({
     fontFamily: roboto.style.fontFamily,
   },
   spacing: 4,
+  components: components,
 });
 
 export default theme;

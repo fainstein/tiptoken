@@ -2,9 +2,7 @@
 import { http, createConfig } from "wagmi";
 import { mainnet, optimism, polygon, sepolia } from "wagmi/chains";
 import {
-  coinbaseWallet,
   injected,
-  safe,
   walletConnect,
 } from "wagmi/connectors";
 

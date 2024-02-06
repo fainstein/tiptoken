@@ -1,7 +1,8 @@
 "use client";
-import { Box, Typography } from "@mui/material";
+import { Box, Link, Typography } from "@mui/material";
 import ConnectWalletButton from "../connect-wallet";
 import React from "react";
+import NextLink from "next/link";
 
 const Navigation = () => {
   return (
@@ -12,7 +13,9 @@ const Navigation = () => {
       alignItems="center"
       padding={6}
     >
-      <Typography variant="h4">Tip Token</Typography>
+      <Link href="/" variant="h4" component={NextLink}>
+        Tip Token
+      </Link>
       <ConnectWalletButton />
     </Box>
   );
