@@ -1,48 +1,42 @@
+import React from "react";
 import {
   Box,
-  Checkbox,
   Chip,
   FormControl,
   InputLabel,
-  ListItemText,
   MenuItem,
   OutlinedInput,
   Select,
   SelectChangeEvent,
 } from "@mui/material";
+import { tokenList } from "../constants/tokenList";
+import { networkList } from "../constants/networks";
+import { Token } from "../types/ethereum";
 
 interface MultipleSelectTokenProps {
-  selectedTokens: string[];
-  setSelectedTokens: (updatedList: string[]) => void;
+  selectedTokens: Token[];
+  setSelectedTokens: React.Dispatch<React.SetStateAction<Token[]>>;
 }
-
-const allowedTokens = ["DAI", "USDT", "USDC"];
 
 const MultipleSelectToken = ({
   selectedTokens,
   setSelectedTokens,
 }: MultipleSelectTokenProps) => {
-  const onSelectItem = (tokenName: string) => {
-    const currentTokens = [...selectedTokens];
-    var index = currentTokens.indexOf(tokenName);
-    if (index === -1) {
-      currentTokens.push(tokenName);
-    } else {
-      currentTokens.splice(index, 1);
-    }
-
-    setSelectedTokens(currentTokens);
-  };
+  const selectedNetwork = networkList.polygon.chainId;
 
   const handleChange = (event: SelectChangeEvent<typeof selectedTokens>) => {
-    const {
-      target: { value },
-    } = event;
-    setSelectedTokens(
-      // On autofill we get a stringified value.
-      typeof value === "string" ? value.split(",") : value
-    );
+    const selectedToken = event.target.value;
+    if (typeof selectedToken === "string") {
+      return;
+    }
+
+    setSelectedTokens(selectedToken);
   };
+
+  const allowedTokens = React.useMemo(
+    () => Object.values(tokenList[selectedNetwork]),
+    [selectedNetwork]
+  );
 
   return (
     <FormControl variant="outlined">
@@ -57,15 +51,18 @@ const MultipleSelectToken = ({
         input={<OutlinedInput id="allowed-tokens" label="Allowed tokens" />}
         renderValue={(selected) => (
           <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-            {selected.map((value) => (
-              <Chip key={value} label={value} />
+            {selected.map((token) => (
+              <Chip key={token.address} label={token.symbol} />
             ))}
           </Box>
         )}
       >
-        {allowedTokens.map((name) => (
-          <MenuItem key={name} value={name}>
-            {name}
+        {allowedTokens.map((token) => (
+          <MenuItem
+            key={`${token.chainId}-${token.address}`}
+            value={token as any}
+          >
+            {token.symbol}
           </MenuItem>
         ))}
       </Select>
