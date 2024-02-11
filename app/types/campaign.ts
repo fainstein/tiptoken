@@ -1,17 +1,23 @@
 import { Address } from "viem";
-import { AmountsOfToken, Token, TokenAddress, TokenList } from "./ethereum";
+import { Token } from "./ethereum";
 
-export interface CampaignDetails {
+export interface BaseCampaign {
   name: string;
+  allowedTokens: Token[];
   goalUSD?: number;
   endDate?: number;
-  allowedTokens: TokenList;
+  owner: Address;
 }
 
-export interface CampaignSummary {
-  name: string;
-  goalUSD?: number;
-  endDate?: number;
-  totalRecevied: Record<TokenAddress, AmountsOfToken>;
-  owner: Address;
+export interface StoredCampaign extends BaseCampaign {
+  campaign_id: number;
+  totalReceived: number;
+}
+
+export interface NewCampaign extends BaseCampaign {
+  signature: Address;
+}
+
+export interface PostCampaign extends Omit<BaseCampaign, "allowedTokens"> {
+  allowedTokens: string[];
 }
