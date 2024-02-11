@@ -26,7 +26,6 @@ const MultipleSelectToken = ({
 
   const handleChange = (event: SelectChangeEvent<typeof selectedTokens>) => {
     const selectedToken = event.target.value;
-    console.log("selectoken", selectedToken);
     if (typeof selectedToken === "string") {
       return;
     }

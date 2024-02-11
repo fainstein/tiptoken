@@ -12,6 +12,7 @@ export default async function Home() {
           href={`/campaign/${campaign.campaign_id}`}
           variant="h4"
           component={NextLink}
+          key={campaign.campaign_id}
         >
           {campaign.name}
         </Link>
