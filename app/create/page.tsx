@@ -34,13 +34,15 @@ async function handlePostCampaign({
     (token) => `${token.chainId}-${token.address}`
   );
   try {
-    await postCampaign({
+    const { campaign_id, creator } = await postCampaign({
       allowedTokens: allowedTokenKeys,
       name: name,
       endDate: endDate,
       goalUSD: goalUSD,
       owner: recoveredAddress.toLowerCase() as typeof recoveredAddress,
     });
+
+    return { campaignId: campaign_id.toString(), creator };
   } catch (e) {
     console.error(e);
   }
