@@ -9,9 +9,9 @@ import {
   Select,
   SelectChangeEvent,
 } from "@mui/material";
-import { tokenList } from "../constants/tokenList";
-import { networkList } from "../constants/networks";
-import { Token } from "../types/ethereum";
+import { tokenList } from "../../constants/tokenList";
+import { networkList } from "../../constants/networks";
+import { Token } from "../../types/ethereum";
 
 interface MultipleSelectTokenProps {
   selectedTokens: Token[];

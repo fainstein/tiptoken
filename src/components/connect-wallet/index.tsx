@@ -2,8 +2,8 @@
 import React from "react";
 import { useAccount } from "wagmi";
 import ConnectWalletModal from "./connect-wallet-modal";
-import { Button, CircularProgress } from "@mui/material";
-import { trimAddress } from "@/app/utils/address";
+import { Button } from "@mui/material";
+import { trimAddress } from "@/utils/address";
 
 const ConnectWalletButton = () => {
   const { isConnected, isConnecting, address } = useAccount();

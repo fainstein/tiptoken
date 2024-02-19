@@ -1,6 +1,4 @@
-import { getCampaign } from "@/app/api/getCampaigns";
-import { Link } from "@mui/material";
-import NextLink from "next/link";
+import { getCampaign } from "@/app/api/campaign/getCampaigns";
 
 export default async function Campaign({
   params,

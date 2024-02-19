@@ -13,14 +13,14 @@ import {
 import { DatePicker } from "@mui/x-date-pickers";
 import { DateTime } from "luxon";
 import MultipleSelectToken from "./multiple-select-token";
-import { NewCampaign } from "../types/campaign";
+import { NewCampaign } from "../../types/campaign";
 import { useAccount, useSignMessage } from "wagmi";
-import { Token } from "../types/ethereum";
-import { generateMessage } from "../utils/address";
+import { Token } from "../../types/ethereum";
+import { generateMessage } from "../../utils/address";
 import { CheckCircleOutline } from "@mui/icons-material";
-import { ContainerBox } from "../ui/components/container-box";
-import { useRouter } from "next/navigation";
-import { NewUser, User } from "../types/user";
+import { ContainerBox } from "../../ui/components/container-box";
+import { NewUser, User } from "../../types/user";
+import Link from "next/link";
 
 interface CreateCampaignFormProps {
   handlePostCampaign: (
@@ -40,7 +40,6 @@ const CreateCampaignForm = ({
   const [user, setUser] = React.useState<{ id?: number; isNew?: boolean }>();
   const { signMessageAsync } = useSignMessage();
   const { address: owner } = useAccount();
-  const router = useRouter();
 
   const handleCreateCampaign = async () => {
     if (!name || selectedTokens.length === 0 || !owner) {
@@ -75,14 +74,19 @@ const CreateCampaignForm = ({
         <ContainerBox flexDirection="column" gap={4}>
           <CheckCircleOutline fontSize="large" />
           {user?.isNew && (
-            <Button fullWidth onClick={() => router.push(`/user/${user.id}`)}>
+            <Button
+              variant="contained"
+              LinkComponent={Link}
+              href={`/user/${user.id}`}
+            >
               Tell contributors about yourself!
             </Button>
           )}
           <ContainerBox gap={2}>
             <Button
               variant="contained"
-              onClick={() => router.push(`/campaign/${success}`)}
+              LinkComponent={Link}
+              href={`/campaign/${success}`}
             >
               View Campaign
             </Button>
