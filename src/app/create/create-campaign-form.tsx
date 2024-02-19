@@ -19,7 +19,6 @@ import { Token } from "../../types/ethereum";
 import { generateMessage } from "../../utils/address";
 import { CheckCircleOutline } from "@mui/icons-material";
 import { ContainerBox } from "../../ui/components/container-box";
-import { useRouter } from "next/navigation";
 import { NewUser, User } from "../../types/user";
 import Link from "next/link";
 
@@ -41,7 +40,6 @@ const CreateCampaignForm = ({
   const [user, setUser] = React.useState<{ id?: number; isNew?: boolean }>();
   const { signMessageAsync } = useSignMessage();
   const { address: owner } = useAccount();
-  const router = useRouter();
 
   const handleCreateCampaign = async () => {
     if (!name || selectedTokens.length === 0 || !owner) {

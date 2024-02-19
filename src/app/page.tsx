@@ -1,6 +1,6 @@
 import { Link } from "@mui/material";
 import NextLink from "next/link";
-import { getCampaigns } from "./api/getCampaigns";
+import { getCampaigns } from "./api/campaign/getCampaigns";
 
 export default async function Home() {
   const campaigns = await getCampaigns();

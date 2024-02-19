@@ -1,8 +1,8 @@
 import { sql } from "@vercel/postgres";
-import { PostCampaign } from "../../types/campaign";
-import { CampaignsRow, UsersRow } from "../../types/db";
+import { PostCampaign } from "../../../types/campaign";
+import { CampaignsRow, UsersRow } from "../../../types/db";
 import { getCampaignCreator } from "./getCampaignCreator";
-import { NewUser, User } from "../../types/user";
+import { NewUser, User } from "../../../types/user";
 
 export async function postCampaign(campaign: PostCampaign): Promise<{
   campaign_id: number;
@@ -15,7 +15,7 @@ export async function postCampaign(campaign: PostCampaign): Promise<{
   let user_id: number;
   if (isNewUser) {
     const newUser =
-      await sql<UsersRow>`INSERT INTO users (address), VALUES (${campaign.owner}) RETURNING user_id;`;
+      await sql<UsersRow>`INSERT INTO users (address) VALUES (${campaign.owner}) RETURNING user_id;`;
     user_id = newUser.rows[0].user_id;
   } else {
     user_id = existingUser.rows[0].user_id;

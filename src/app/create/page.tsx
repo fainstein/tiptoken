@@ -1,7 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import CreateCampaignForm from "./create-campaign-form";
 import { NewCampaign } from "../../types/campaign";
-import { postCampaign } from "../api/postCampaign";
+import { postCampaign } from "../api/campaign/postCampaign";
 import { recoverMessageAddress, verifyMessage } from "viem";
 import { generateMessage } from "../../utils/address";
 
