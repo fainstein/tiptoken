@@ -3,7 +3,7 @@ import { Box, Button, Link, Typography } from "@mui/material";
 import ConnectWalletButton from "../connect-wallet";
 import React from "react";
 import NextLink from "next/link";
-import { ContainerBox } from "@/src/ui/components/container-box";
+import { ContainerBox } from "@/ui/components/container-box";
 
 const Navigation = () => {
   return (
