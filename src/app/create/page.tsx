@@ -1,9 +1,9 @@
 import { Box, Typography } from "@mui/material";
 import CreateCampaignForm from "./create-campaign-form";
-import { NewCampaign } from "../types/campaign";
+import { NewCampaign } from "../../types/campaign";
 import { postCampaign } from "../api/postCampaign";
 import { recoverMessageAddress, verifyMessage } from "viem";
-import { generateMessage } from "../utils/address";
+import { generateMessage } from "../../utils/address";
 
 async function handlePostCampaign({
   signature,

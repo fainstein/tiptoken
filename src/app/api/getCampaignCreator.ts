@@ -1,6 +1,6 @@
 import { sql } from "@vercel/postgres";
-import { SocialMediaLinksRow, UsersRow } from "../types/db";
-import { NewUser, User } from "../types/user";
+import { SocialMediaLinksRow, UsersRow } from "../../types/db";
+import { NewUser, User } from "../../types/user";
 import { Address } from "viem";
 
 export async function getCampaignCreator(

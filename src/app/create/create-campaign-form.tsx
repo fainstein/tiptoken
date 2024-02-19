@@ -13,14 +13,14 @@ import {
 import { DatePicker } from "@mui/x-date-pickers";
 import { DateTime } from "luxon";
 import MultipleSelectToken from "./multiple-select-token";
-import { NewCampaign } from "../types/campaign";
+import { NewCampaign } from "../../types/campaign";
 import { useAccount, useSignMessage } from "wagmi";
-import { Token } from "../types/ethereum";
-import { generateMessage } from "../utils/address";
+import { Token } from "../../types/ethereum";
+import { generateMessage } from "../../utils/address";
 import { CheckCircleOutline } from "@mui/icons-material";
-import { ContainerBox } from "../ui/components/container-box";
+import { ContainerBox } from "../../ui/components/container-box";
 import { useRouter } from "next/navigation";
-import { NewUser, User } from "../types/user";
+import { NewUser, User } from "../../types/user";
 import Link from "next/link";
 
 interface CreateCampaignFormProps {

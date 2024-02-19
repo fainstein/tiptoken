@@ -1,4 +1,4 @@
-import { getCampaign } from "@/app/api/getCampaigns";
+import { getCampaign } from "@/src/app/api/getCampaigns";
 import { Link } from "@mui/material";
 import NextLink from "next/link";
 

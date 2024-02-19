@@ -1,5 +1,5 @@
 import { sql } from "@vercel/postgres";
-import { CampaignsRow } from "../types/db";
+import { CampaignsRow } from "../../types/db";
 
 export async function getCampaigns(start = 0): Promise<CampaignsRow[]> {
   const { rows } =

@@ -1,7 +1,7 @@
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import Navigation from "./components/navigation";
+import Navigation from "../components/navigation";
 import Wrappers from "./wrappers";
 import { Grid } from "@mui/material";
 
