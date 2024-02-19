@@ -21,6 +21,7 @@ import { CheckCircleOutline } from "@mui/icons-material";
 import { ContainerBox } from "../ui/components/container-box";
 import { useRouter } from "next/navigation";
 import { NewUser, User } from "../types/user";
+import Link from "next/link";
 
 interface CreateCampaignFormProps {
   handlePostCampaign: (
@@ -75,14 +76,19 @@ const CreateCampaignForm = ({
         <ContainerBox flexDirection="column" gap={4}>
           <CheckCircleOutline fontSize="large" />
           {user?.isNew && (
-            <Button fullWidth onClick={() => router.push(`/user/${user.id}`)}>
+            <Button
+              variant="contained"
+              LinkComponent={Link}
+              href={`/user/${user.id}`}
+            >
               Tell contributors about yourself!
             </Button>
           )}
           <ContainerBox gap={2}>
             <Button
               variant="contained"
-              onClick={() => router.push(`/campaign/${success}`)}
+              LinkComponent={Link}
+              href={`/campaign/${success}`}
             >
               View Campaign
             </Button>

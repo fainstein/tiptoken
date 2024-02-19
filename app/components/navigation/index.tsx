@@ -1,8 +1,9 @@
 "use client";
-import { Box, Link, Typography } from "@mui/material";
+import { Box, Button, Link, Typography } from "@mui/material";
 import ConnectWalletButton from "../connect-wallet";
 import React from "react";
 import NextLink from "next/link";
+import { ContainerBox } from "@/app/ui/components/container-box";
 
 const Navigation = () => {
   return (
@@ -16,7 +17,12 @@ const Navigation = () => {
       <Link href="/" variant="h4" component={NextLink}>
         Tip Token
       </Link>
-      <ConnectWalletButton />
+      <ContainerBox alignItems="center" gap={3}>
+        <Button variant="contained" href="/create" LinkComponent={NextLink}>
+          Create
+        </Button>
+        <ConnectWalletButton />
+      </ContainerBox>
     </Box>
   );
 };
