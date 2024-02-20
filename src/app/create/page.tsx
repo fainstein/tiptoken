@@ -4,7 +4,7 @@ import { NewCampaign } from "../../types/campaign";
 import { postCampaign } from "../api/campaign/postCampaign";
 import { recoverMessageAddress, verifyMessage } from "viem";
 import { generateMessage } from "../../utils/address";
-
+// HELLO
 async function handlePostCampaign({
   signature,
   allowedTokens,
