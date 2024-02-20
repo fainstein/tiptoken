@@ -1,5 +1,5 @@
 "use client";
-import { Box, Button, Link, Typography } from "@mui/material";
+import { Box, Button, Link } from "@mui/material";
 import ConnectWalletButton from "../connect-wallet";
 import React from "react";
 import NextLink from "next/link";
