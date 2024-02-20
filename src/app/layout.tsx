@@ -1,9 +1,10 @@
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import Navigation from "../components/navigation";
 import Wrappers from "./wrappers";
 import { Grid } from "@mui/material";
+import Footer from "@/components/footer";
+import Navigation from "@/components/navigation";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -28,11 +29,11 @@ export default function RootLayout({
               container
               justifyContent="center"
               alignItems="center"
-              position="absolute"
-              minHeight="calc(100vh - 90px)"
+              minHeight="calc(100vh - 130px)"
             >
               {children}
             </Grid>
+            <Footer />
           </AppRouterCacheProvider>
         </Wrappers>
       </body>
