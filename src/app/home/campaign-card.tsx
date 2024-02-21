@@ -27,7 +27,7 @@ const CampaignCard = ({ campaign }: { campaign: StoredCampaign }) => {
             width={24}
             height={24}
           />
-          <Typography variant="body1">'s received</Typography>
+          <Typography variant="body1">received</Typography>
         </Box>
         {campaign.goalUSD && (
           <>
