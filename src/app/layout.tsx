@@ -9,8 +9,8 @@ import Navigation from "@/components/navigation";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Tip Token",
-  description: "Descentralized Tips",
+  title: "CafeCrypto",
+  description: "Descentralized Rewards",
 };
 
 export default function RootLayout({
@@ -30,8 +30,11 @@ export default function RootLayout({
               justifyContent="center"
               alignItems="center"
               minHeight="calc(100vh - 130px)"
+              px={{ xs: 5, md: 10 }}
             >
-              {children}
+              <Grid item xs={12}>
+                {children}
+              </Grid>
             </Grid>
             <Footer />
           </AppRouterCacheProvider>

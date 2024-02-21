@@ -5,13 +5,16 @@ export interface BaseCampaign {
   name: string;
   allowedTokens: Token[];
   goalUSD?: number;
-  endDate?: number;
+  endDate?: Date;
   owner: Address;
 }
 
 export interface StoredCampaign extends BaseCampaign {
-  campaign_id: number;
+  campaignId: number;
   totalReceived: number;
+  createdAt: Date;
+  isOpen: boolean;
+  userId: number;
 }
 
 export interface NewCampaign extends BaseCampaign {

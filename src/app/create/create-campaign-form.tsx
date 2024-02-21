@@ -56,7 +56,7 @@ const CreateCampaignForm = ({
       name,
       allowedTokens: selectedTokens,
       signature: signMessageData,
-      endDate: endDate?.toSeconds(),
+      endDate: endDate?.toJSDate(),
       goalUSD: +goalUSD > 0 ? +goalUSD : undefined,
       owner,
     });
