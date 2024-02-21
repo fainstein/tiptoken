@@ -1,7 +1,8 @@
 export interface CampaignsRow {
   campaign_id: number;
   name: string;
-  goal_usd?: number;
+  cafe_crypto_unit: number;
+  goal_cc?: number;
   end_date?: Date;
   user_id: number;
   total_received: number;

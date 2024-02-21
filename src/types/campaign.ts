@@ -4,7 +4,8 @@ import { Token } from "./ethereum";
 export interface BaseCampaign {
   name: string;
   allowedTokens: Token[];
-  goalUSD?: number;
+  cafeCryptoUnit: number;
+  goalCC?: number;
   endDate?: Date;
   owner: Address;
 }
