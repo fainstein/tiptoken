@@ -7,10 +7,6 @@ import Image from "next/image";
 import CafeCrypto from "@/../public/CafeCrypto.png";
 
 const CampaignCard = ({ campaign }: { campaign: StoredCampaign }) => {
-  const daysLeft = campaign.endDate
-    ? DateTime.fromJSDate(campaign.endDate).diffNow("days").days.toFixed(0)
-    : undefined;
-
   return (
     <Link
       href={`/campaign/${campaign.campaignId}`}
@@ -29,23 +25,20 @@ const CampaignCard = ({ campaign }: { campaign: StoredCampaign }) => {
           />
           <Typography variant="body1">received</Typography>
         </Box>
-        {campaign.goalUSD && (
+        {campaign.goalCC && (
           <>
             <LinearProgress
               variant="determinate"
-              value={campaign.totalReceived / campaign.goalUSD}
+              value={campaign.totalReceived / campaign.goalCC}
             />
             <Typography textAlign="right" variant="body1">
-              Goal: {campaign.goalUSD} TT
-            </Typography>
-          </>
-        )}
-        {campaign.endDate && (
-          <>
-            <Typography textAlign="right" variant="body1">
-              {daysLeft && +daysLeft > 0
-                ? `Ends in ${daysLeft} days`
-                : `Campaign ended`}
+              Goal: {campaign.goalCC}{" "}
+              <Image
+                alt="cafe-crypto-unit"
+                src={CafeCrypto}
+                width={24}
+                height={24}
+              />
             </Typography>
           </>
         )}

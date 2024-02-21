@@ -23,10 +23,10 @@ export async function postCampaign(campaign: PostCampaign): Promise<{
 
   // Insert campaign
   const returnedCampaign =
-    await sql<CampaignsRow>`INSERT INTO campaigns (name, goal_usd, end_date, user_id)
-          VALUES (${campaign.name}, ${campaign.goalUSD || null}, TO_TIMESTAMP(${
-      campaign.endDate?.toLocaleDateString() || null
-    }), ${user_id})
+    await sql<CampaignsRow>`INSERT INTO campaigns (name, cafe_crypto_unit, goal_cc, user_id)
+          VALUES (${campaign.name}, ${campaign.cafeCryptoUnit}, ${
+      campaign.goalCC || null
+    }, ${user_id})
           RETURNING campaign_id`;
 
   const campaign_id = returnedCampaign.rows[0].campaign_id;

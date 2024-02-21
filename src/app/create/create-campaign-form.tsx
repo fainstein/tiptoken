@@ -5,6 +5,8 @@ import {
   Box,
   Button,
   CircularProgress,
+  FormControl,
+  FormHelperText,
   InputAdornment,
   OutlinedInput,
   TextField,
@@ -33,8 +35,7 @@ const CreateCampaignForm = ({
 }: CreateCampaignFormProps) => {
   const [selectedTokens, setSelectedTokens] = React.useState<Token[]>([]);
   const [name, setName] = React.useState("");
-  const [endDate, setEndDate] = React.useState<DateTime | null>(null);
-  const [goalUSD, setGoalUSD] = React.useState("");
+  const [goalCC, setGoalCC] = React.useState("");
   const [CCValue, setCCValue] = React.useState("");
   const [isLoading, setIsLoading] = React.useState(false);
   const [success, setSuccess] = React.useState("");
@@ -43,7 +44,7 @@ const CreateCampaignForm = ({
   const { address: owner } = useAccount();
 
   const handleCreateCampaign = async () => {
-    if (!name || selectedTokens.length === 0 || !owner) {
+    if (!name || selectedTokens.length === 0 || !owner || !+CCValue) {
       return;
     }
 
@@ -57,8 +58,8 @@ const CreateCampaignForm = ({
       name,
       allowedTokens: selectedTokens,
       signature: signMessageData,
-      endDate: endDate?.toJSDate(),
-      goalUSD: +goalUSD > 0 ? +goalUSD : undefined,
+      cafeCryptoUnit: +CCValue,
+      goalCC: +goalCC > 0 ? +goalCC : undefined,
       owner,
     });
     setSuccess(campaignData?.campaignId ?? "");
@@ -118,29 +119,36 @@ const CreateCampaignForm = ({
             selectedTokens={selectedTokens}
             setSelectedTokens={setSelectedTokens}
           />
-          <OutlinedInput
-            id="CCValue"
-            placeholder="☕"
-            inputProps={{ min: 1, step: 1 }}
-            endAdornment={<InputAdornment position="end">USD</InputAdornment>}
-            type="number"
-            value={goalUSD}
-            onChange={(e) => setGoalUSD(e.target.value)}
-          />
-          <DatePicker
-            label="End date"
-            value={endDate}
-            onChange={(newValue) => setEndDate(newValue)}
-          />
-          <OutlinedInput
-            id="goalUSD"
-            placeholder="Goal"
-            inputProps={{ min: 1, step: 1 }}
-            endAdornment={<InputAdornment position="end">USD</InputAdornment>}
-            type="number"
-            value={goalUSD}
-            onChange={(e) => setGoalUSD(e.target.value)}
-          />
+          <FormControl variant="outlined">
+            <OutlinedInput
+              id="CCValue"
+              placeholder="☕ value"
+              inputProps={{ min: 1, step: 1 }}
+              endAdornment={<InputAdornment position="end">USD</InputAdornment>}
+              type="number"
+              value={CCValue}
+              onChange={(e) => setCCValue(e.target.value)}
+            />
+            <FormHelperText>
+              This is the minimum amount you will receive for each donation
+            </FormHelperText>
+          </FormControl>
+          <FormControl variant="outlined">
+            <OutlinedInput
+              id="goalCC"
+              placeholder="Goal"
+              inputProps={{ min: 1, step: 1 }}
+              endAdornment={<InputAdornment position="end">☕</InputAdornment>}
+              type="number"
+              value={goalCC}
+              onChange={(e) => setGoalCC(e.target.value)}
+            />
+            {goalCC && (
+              <FormHelperText>
+                Your goal: {+goalCC * +CCValue} USD
+              </FormHelperText>
+            )}
+          </FormControl>
           <Button
             variant="contained"
             size="large"

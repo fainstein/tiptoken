@@ -10,7 +10,8 @@ async function handlePostCampaign({
   allowedTokens,
   name,
   endDate,
-  goalUSD,
+  cafeCryptoUnit,
+  goalCC,
   owner,
 }: NewCampaign) {
   "use server";
@@ -36,9 +37,10 @@ async function handlePostCampaign({
   try {
     const { campaign_id, creator } = await postCampaign({
       allowedTokens: allowedTokenKeys,
-      name: name,
-      endDate: endDate,
-      goalUSD: goalUSD,
+      name,
+      endDate,
+      cafeCryptoUnit,
+      goalCC,
       owner: recoveredAddress.toLowerCase() as typeof recoveredAddress,
     });
 

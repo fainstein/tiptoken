@@ -5,7 +5,7 @@ import { transformCampaigns } from "../transform/campaign";
 
 export async function getOpenCampaigns(start = 0): Promise<StoredCampaign[]> {
   const { rows } =
-    await sql<CampaignsRow>`SELECT campaign_id, name, goal_usd, end_date, total_received, user_id FROM campaigns WHERE is_open=true ORDER BY created_at LIMIT 20 OFFSET ${start};`;
+    await sql<CampaignsRow>`SELECT campaign_id, name, cafe_crypto_unit, goal_cc, end_date, total_received, user_id FROM campaigns WHERE is_open=true ORDER BY created_at LIMIT 20 OFFSET ${start};`;
 
   return transformCampaigns(rows);
 }

@@ -12,7 +12,8 @@ export const transformCampaigns = (
       name,
       total_received,
       end_date,
-      goal_usd,
+      goal_cc,
+      cafe_crypto_unit,
       user_id,
     }) => ({
       campaignId: campaign_id,
@@ -21,7 +22,8 @@ export const transformCampaigns = (
       name,
       totalReceived: total_received,
       endDate: end_date,
-      goalUSD: goal_usd,
+      cafeCryptoUnit: cafe_crypto_unit,
+      goalCC: goal_cc,
       allowedTokens: [], // TODO
       owner: "0x", // TODO
       userId: user_id,
