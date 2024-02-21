@@ -25,7 +25,7 @@ export async function postCampaign(campaign: PostCampaign): Promise<{
   const returnedCampaign =
     await sql<CampaignsRow>`INSERT INTO campaigns (name, goal_usd, end_date, user_id)
           VALUES (${campaign.name}, ${campaign.goalUSD || null}, TO_TIMESTAMP(${
-      campaign.endDate || null
+      campaign.endDate?.toLocaleDateString() || null
     }), ${user_id})
           RETURNING campaign_id`;
 

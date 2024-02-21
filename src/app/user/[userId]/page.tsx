@@ -44,9 +44,9 @@ export default async function User({ params }: { params: { userId: string } }) {
       )}
       <Typography variant="h2">Your campaigns</Typography>
       {userCampaigns.map((campaign) => (
-        <div key={campaign.campaign_id}>
+        <div key={campaign.campaignId}>
           <Typography variant="body1"> Name: {campaign.name}</Typography>
-          <Typography variant="body1"> Id: {campaign.campaign_id}</Typography>
+          <Typography variant="body1"> Id: {campaign.campaignId}</Typography>
         </div>
       ))}
     </Box>
