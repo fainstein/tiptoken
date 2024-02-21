@@ -35,6 +35,7 @@ const CreateCampaignForm = ({
   const [name, setName] = React.useState("");
   const [endDate, setEndDate] = React.useState<DateTime | null>(null);
   const [goalUSD, setGoalUSD] = React.useState("");
+  const [CCValue, setCCValue] = React.useState("");
   const [isLoading, setIsLoading] = React.useState(false);
   const [success, setSuccess] = React.useState("");
   const [user, setUser] = React.useState<{ id?: number; isNew?: boolean }>();
@@ -56,7 +57,7 @@ const CreateCampaignForm = ({
       name,
       allowedTokens: selectedTokens,
       signature: signMessageData,
-      endDate: endDate?.toSeconds(),
+      endDate: endDate?.toJSDate(),
       goalUSD: +goalUSD > 0 ? +goalUSD : undefined,
       owner,
     });
@@ -116,6 +117,15 @@ const CreateCampaignForm = ({
           <MultipleSelectToken
             selectedTokens={selectedTokens}
             setSelectedTokens={setSelectedTokens}
+          />
+          <OutlinedInput
+            id="CCValue"
+            placeholder="☕"
+            inputProps={{ min: 1, step: 1 }}
+            endAdornment={<InputAdornment position="end">USD</InputAdornment>}
+            type="number"
+            value={goalUSD}
+            onChange={(e) => setGoalUSD(e.target.value)}
           />
           <DatePicker
             label="End date"

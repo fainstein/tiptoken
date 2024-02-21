@@ -2,11 +2,11 @@ export interface CampaignsRow {
   campaign_id: number;
   name: string;
   goal_usd?: number;
-  end_date?: number;
+  end_date?: Date;
   user_id: number;
   total_received: number;
   is_open: boolean;
-  created_at: number;
+  created_at: Date;
 }
 
 export interface CampaignAllowedTokensRow {

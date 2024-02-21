@@ -1,22 +1,22 @@
-import { Link } from "@mui/material";
-import NextLink from "next/link";
-import { getCampaigns } from "./api/campaign/getCampaigns";
+import { Box, Grid, Typography } from "@mui/material";
+import { getOpenCampaigns } from "./api/campaign/getCampaigns";
+import CampaignCard from "./home/campaign-card";
 
 export default async function Home() {
-  const campaigns = await getCampaigns();
+  const campaigns = await getOpenCampaigns();
 
   return (
-    <div>
-      {campaigns.map((campaign) => (
-        <Link
-          href={`/campaign/${campaign.campaign_id}`}
-          variant="h4"
-          component={NextLink}
-          key={campaign.campaign_id}
-        >
-          {campaign.name}
-        </Link>
-      ))}
-    </div>
+    <Box display="flex" flexDirection="column" gap={8}>
+      <Typography variant="h2" textAlign="left">
+        Open campaigns
+      </Typography>
+      <Box display="flex" flexDirection="column" gap={2}>
+        {campaigns.map((campaign) => (
+          <Grid item xs={12} key={campaign.campaignId}>
+            <CampaignCard campaign={campaign} />
+          </Grid>
+        ))}
+      </Box>
+    </Box>
   );
 }
