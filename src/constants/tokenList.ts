@@ -2,10 +2,10 @@ import { TokenList } from "../types/ethereum";
 import { networkList } from "./networks";
 
 export const tokenList: TokenList = {
-  [networkList.mainnet.chainId]: {
+  [networkList.ethereum.chainId]: {
     "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee": {
       address: "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
-      chainId: networkList.mainnet.chainId,
+      chainId: networkList.ethereum.chainId,
       decimals: 18,
       name: "Ethereum",
       symbol: "ETH",
