@@ -1,9 +1,26 @@
+import { tokenList } from "@/constants/tokenList";
 import { StoredCampaign } from "@/types/campaign";
-import { CampaignsRow } from "@/types/db";
+import { CampaignAllowedTokensRow, CampaignsRow } from "@/types/db";
+import { Token } from "@/types/ethereum";
+import { Address } from "viem";
 
-export const transformCampaigns = (
-  campaigns: CampaignsRow[]
-): StoredCampaign[] => {
+export const transformCampaigns = ({
+  campaigns,
+  allowedTokens,
+  ownerAddress,
+}: {
+  campaigns: CampaignsRow[];
+  allowedTokens: CampaignAllowedTokensRow[];
+  ownerAddress: string;
+}): StoredCampaign[] => {
+  const parsedAllowedTokens = allowedTokens.reduce<Token[]>((acc, tokenKey) => {
+    const [chainId, tokenAddress] = tokenKey.token_key.split("-");
+    const token = tokenList[+chainId][tokenAddress as Address];
+
+    acc.push(token);
+    return acc;
+  }, []);
+
   const parsedCampaign: StoredCampaign[] = campaigns.map(
     ({
       campaign_id,
@@ -24,8 +41,8 @@ export const transformCampaigns = (
       endDate: end_date,
       cafeCryptoUnit: cafe_crypto_unit,
       goalCC: goal_cc,
-      allowedTokens: [], // TODO
-      owner: "0x", // TODO
+      allowedTokens: parsedAllowedTokens,
+      owner: ownerAddress as Address,
       userId: user_id,
     })
   );

@@ -26,15 +26,26 @@ interface SupportCampaignFormProps {
 }
 
 const SupportCampaignForm = ({ campaign }: SupportCampaignFormProps) => {
-  const [network, setNetwork] = React.useState<Network>(networkList["mainnet"]);
-  const defaultToken = campaign.allowedTokens.find(
-    (tokenItem) => tokenItem.chainId === network.chainId
+  const [network, setNetwork] = React.useState<Network>(networkList["polygon"]);
+
+  const getDefaultToken = React.useCallback(
+    (chainId: number) =>
+      campaign.allowedTokens.find((tokenItem) => tokenItem.chainId === chainId),
+    [campaign]
   );
-  const [token, setToken] = React.useState<Token | undefined>(defaultToken);
+
+  const [token, setToken] = React.useState<Token | undefined>(
+    getDefaultToken(network.chainId)
+  );
   const [ccAmount, setCcAmount] = React.useState("");
   const [message, setMessage] = React.useState("");
   const [isLoading, setIsLoading] = React.useState(false);
   const [success, setSuccess] = React.useState(false);
+
+  const handleNetworkChange = (chainId: number) => {
+    const newDefaultToken = getDefaultToken(chainId);
+    setToken(newDefaultToken);
+  };
 
   const handleSupportCampaign = async () => {
     // setIsLoading(true);
@@ -42,6 +53,22 @@ const SupportCampaignForm = ({ campaign }: SupportCampaignFormProps) => {
     // setSuccess(true);
     // setIsLoading(false);
   };
+
+  const allowedTokens = React.useMemo(
+    () =>
+      campaign.allowedTokens.filter(
+        (token) => token.chainId === network.chainId
+      ),
+    [network, campaign]
+  );
+
+  const allowedChains = React.useMemo(() => {
+    const uniqueChainIdsSet = new Set(
+      campaign.allowedTokens.map((token) => token.chainId)
+    );
+
+    return [...uniqueChainIdsSet];
+  }, [campaign]);
 
   return (
     <Box
@@ -51,12 +78,13 @@ const SupportCampaignForm = ({ campaign }: SupportCampaignFormProps) => {
       gap={3}
       maxWidth="sm"
     >
-      <NetworkSelector value={network} setValue={setNetwork} />
-      <TokenSelector
-        value={token}
-        setValue={setToken}
-        tokens={campaign.allowedTokens}
+      <NetworkSelector
+        value={network}
+        setValue={setNetwork}
+        onChange={handleNetworkChange}
+        allowedChains={allowedChains}
       />
+      <TokenSelector value={token} setValue={setToken} tokens={allowedTokens} />
       <FormControl variant="outlined">
         <OutlinedInput
           id="cc-amount"
