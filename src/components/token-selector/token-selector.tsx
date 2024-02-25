@@ -29,7 +29,9 @@ const TokenSelector = ({ value, setValue, tokens }: TokenSelectorProps) => {
       >
         {tokens.length > 0 ? (
           tokens.map((token) => (
-            <MenuItem value={token.address}>{token.symbol}</MenuItem>
+            <MenuItem key={token.address} value={token.address}>
+              {token.symbol}
+            </MenuItem>
           ))
         ) : (
           <MenuItem value="">
