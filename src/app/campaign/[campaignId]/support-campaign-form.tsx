@@ -4,18 +4,16 @@ import React from "react";
 import {
   Box,
   Button,
-  CircularProgress,
   FormControl,
   FormHelperText,
-  Grid,
   InputAdornment,
   OutlinedInput,
+  Skeleton,
   TextField,
-  Typography,
 } from "@mui/material";
 import { StoredCampaign } from "@/types/campaign";
 import NetworkSelector from "@/components/network-selector/network-selector";
-import { Network, Token } from "@/types/ethereum";
+import { Network, Token, TokenAddress, TokenPrices } from "@/types/ethereum";
 import { networkList } from "@/constants/networks";
 import TokenSelector from "@/components/token-selector/token-selector";
 import Image from "next/image";
@@ -23,9 +21,19 @@ import CafeCrypto from "@/../public/CafeCrypto.png";
 
 interface SupportCampaignFormProps {
   campaign: StoredCampaign;
+  handleGetTokensPrices: ({
+    networkName,
+    tokens,
+  }: {
+    networkName: string;
+    tokens: TokenAddress[];
+  }) => Promise<TokenPrices>;
 }
 
-const SupportCampaignForm = ({ campaign }: SupportCampaignFormProps) => {
+const SupportCampaignForm = ({
+  campaign,
+  handleGetTokensPrices,
+}: SupportCampaignFormProps) => {
   const [network, setNetwork] = React.useState<Network>(networkList["polygon"]);
 
   const getDefaultToken = React.useCallback(
@@ -39,6 +47,8 @@ const SupportCampaignForm = ({ campaign }: SupportCampaignFormProps) => {
   );
   const [ccAmount, setCcAmount] = React.useState("");
   const [message, setMessage] = React.useState("");
+  const [tokenPrices, setTokenPrices] = React.useState<TokenPrices>();
+  const [isLoadingPrices, setIsLoadingPrices] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
   const [success, setSuccess] = React.useState(false);
 
@@ -69,6 +79,26 @@ const SupportCampaignForm = ({ campaign }: SupportCampaignFormProps) => {
 
     return [...uniqueChainIdsSet];
   }, [campaign]);
+
+  React.useEffect(() => {
+    const tokenAddresses = allowedTokens.map((token) => token.address);
+    const getData = async () => {
+      setIsLoadingPrices(true);
+      const prices = await handleGetTokensPrices({
+        networkName: network.name,
+        tokens: tokenAddresses,
+      });
+      setTokenPrices(prices);
+      setIsLoadingPrices(false);
+    };
+    getData();
+  }, [network]);
+
+  const ccUsdValue = +ccAmount * campaign.cafeCryptoUnit;
+  const tokenValue =
+    token && tokenPrices && tokenPrices[token.address]
+      ? ccUsdValue / tokenPrices[token.address]
+      : undefined;
 
   return (
     <Box
@@ -105,7 +135,15 @@ const SupportCampaignForm = ({ campaign }: SupportCampaignFormProps) => {
           onChange={(e) => setCcAmount(e.target.value)}
         />
         <FormHelperText>
-          0.002 WETH ≈ ${+ccAmount * campaign.cafeCryptoUnit}
+          {isLoadingPrices ? (
+            <Skeleton variant="text" width={100} />
+          ) : (
+            token &&
+            tokenValue &&
+            `${parseFloat(tokenValue.toFixed(3))} ${
+              token.symbol
+            } ≈ $${ccUsdValue.toFixed(2)}`
+          )}
         </FormHelperText>
       </FormControl>
       <TextField

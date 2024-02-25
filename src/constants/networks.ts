@@ -1,8 +1,8 @@
 import { NetworkList } from "../types/ethereum";
 
 export const networkList: NetworkList = {
-  mainnet: {
-    name: "Ethereum Mainnet",
+  ethereum: {
+    name: "Ethereum",
     chainId: 1,
     abbreviation: "ETH",
   },

@@ -37,3 +37,5 @@ export interface Network {
 }
 
 export type NetworkList = Record<string, Network>;
+
+export type TokenPrices = Record<TokenAddress, number>;
