@@ -1,35 +1,19 @@
 import React from "react";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
-import { Network } from "@/types/ethereum";
+import { Network, NetworkList } from "@/types/ethereum";
 import { networkList } from "@/constants/networks";
 
 interface NetworkSelectorProps {
   value: Network;
-  setValue: React.Dispatch<React.SetStateAction<Network>>;
   onChange: (chainId: number) => void;
-  allowedChains: number[];
+  allowedNetworks: NetworkList;
 }
 
 const NetworkSelector = ({
   value,
-  setValue,
   onChange,
-  allowedChains,
+  allowedNetworks,
 }: NetworkSelectorProps) => {
-  const handleChange = (chainId: string) => {
-    const selectedChain = Object.values(networkList).find(
-      (network) => network.chainId === +chainId
-    );
-    if (selectedChain) {
-      setValue(selectedChain);
-      onChange(selectedChain.chainId);
-    }
-  };
-
-  const filteredChains = Object.values(networkList).filter((network) =>
-    allowedChains.includes(network.chainId)
-  );
-
   return (
     <FormControl variant="outlined">
       <InputLabel id="network-selector-label">Network</InputLabel>
@@ -37,10 +21,10 @@ const NetworkSelector = ({
         labelId="network-selector-label"
         id="network-selector"
         value={value.chainId.toString()}
-        onChange={(e) => handleChange(e.target.value)}
+        onChange={(e) => onChange(+e.target.value)}
         label="Network"
       >
-        {filteredChains.map((network) => (
+        {Object.values(allowedNetworks).map((network) => (
           <MenuItem key={network.chainId} value={network.chainId}>
             {network.name}
           </MenuItem>

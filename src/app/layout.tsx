@@ -1,10 +1,13 @@
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import Wrappers from "./wrappers";
+import Providers from "./providers";
 import { Grid } from "@mui/material";
 import Footer from "@/components/footer";
 import Navigation from "@/components/navigation";
+import { cookieToInitialState } from "wagmi";
+import { config } from "@/ethereum/wagmi/config";
+import { headers } from "next/headers";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,10 +21,11 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const initialState = cookieToInitialState(config, headers().get("cookie"));
   return (
     <html lang="en">
       <body className={inter.className} style={{ margin: 0 }}>
-        <Wrappers>
+        <Providers initialState={initialState}>
           <AppRouterCacheProvider>
             <Navigation />
             <Grid
@@ -38,7 +42,7 @@ export default function RootLayout({
             </Grid>
             <Footer />
           </AppRouterCacheProvider>
-        </Wrappers>
+        </Providers>
       </body>
     </html>
   );

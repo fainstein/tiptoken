@@ -1,10 +1,6 @@
-"use client";
-import { http, createConfig } from "wagmi";
-import { mainnet, optimism, polygon, sepolia } from "wagmi/chains";
-import {
-  injected,
-  walletConnect,
-} from "wagmi/connectors";
+import { http, createConfig, createStorage, cookieStorage } from "wagmi";
+import { mainnet, optimism, polygon, arbitrum } from "wagmi/chains";
+import { injected, walletConnect } from "wagmi/connectors";
 
 declare module "wagmi" {
   interface Register {
@@ -13,16 +9,21 @@ declare module "wagmi" {
 }
 
 export const config = createConfig({
-  chains: [mainnet, optimism, polygon, sepolia],
+  chains: [mainnet, optimism, polygon, arbitrum],
   ssr: true,
+  storage: createStorage({
+    storage: cookieStorage,
+  }),
   transports: {
     [mainnet.id]: http(),
     [optimism.id]: http(),
     [polygon.id]: http(),
-    [sepolia.id]: http(),
+    [arbitrum.id]: http(),
   },
   connectors: [
     injected(),
-    walletConnect({ projectId: process.env.NEXT_PUBLIC_WC_PROJECT_ID as string }),
+    // walletConnect({
+    //   projectId: process.env.NEXT_PUBLIC_WC_PROJECT_ID as string,
+    // }),
   ],
 });
