@@ -1,15 +1,31 @@
+"use client";
 import React from "react";
-import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import {
+  FormControl,
+  FormHelperText,
+  InputLabel,
+  MenuItem,
+  Select,
+  Skeleton,
+} from "@mui/material";
 import { Token } from "@/types/ethereum";
-import { Address } from "viem";
+import { Address, formatUnits } from "viem";
 
 interface TokenSelectorProps {
-  value?: Token;
-  setValue: React.Dispatch<React.SetStateAction<Token | undefined>>;
+  value: Token;
+  setValue: React.Dispatch<React.SetStateAction<Token>>;
   tokens: Token[];
+  balance?: bigint;
+  isLoadingBalance?: boolean;
 }
 
-const TokenSelector = ({ value, setValue, tokens }: TokenSelectorProps) => {
+const TokenSelector = ({
+  value,
+  setValue,
+  tokens,
+  balance,
+  isLoadingBalance,
+}: TokenSelectorProps) => {
   const handleChange = (address: Address) => {
     const selectedToken = tokens.find((token) => token.address === address);
     if (selectedToken) {
@@ -23,7 +39,7 @@ const TokenSelector = ({ value, setValue, tokens }: TokenSelectorProps) => {
       <Select
         labelId="token-selector-label"
         id="token-selector"
-        value={value?.address || ""}
+        value={value.address}
         onChange={(e) => handleChange(e.target.value as Address)}
         label="Token"
       >
@@ -39,6 +55,15 @@ const TokenSelector = ({ value, setValue, tokens }: TokenSelectorProps) => {
           </MenuItem>
         )}
       </Select>
+      <FormHelperText>
+        {isLoadingBalance ? (
+          <Skeleton variant="text" width={100} />
+        ) : (
+          `Balance: ${balance ? formatUnits(balance, value.decimals) : 0} ${
+            value?.symbol
+          }`
+        )}
+      </FormHelperText>
     </FormControl>
   );
 };

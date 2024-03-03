@@ -36,6 +36,6 @@ export interface Network {
   abbreviation: string;
 }
 
-export type NetworkList = Record<string, Network>;
+export type NetworkList = Record<ChainId, Network>;
 
 export type TokenPrices = Record<TokenAddress, number>;

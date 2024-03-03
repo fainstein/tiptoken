@@ -1,22 +1,22 @@
 import { NetworkList } from "../types/ethereum";
 
 export const networkList: NetworkList = {
-  ethereum: {
+  [1]: {
     name: "Ethereum",
     chainId: 1,
     abbreviation: "ETH",
   },
-  arbitrum: {
+  [42161]: {
     name: "Arbitrum",
     chainId: 42161,
     abbreviation: "ARB",
   },
-  polygon: {
+  [137]: {
     name: "Polygon",
     chainId: 137,
     abbreviation: "MATIC",
   },
-  optimism: {
+  [10]: {
     name: "Optimism",
     chainId: 10,
     abbreviation: "OVM",

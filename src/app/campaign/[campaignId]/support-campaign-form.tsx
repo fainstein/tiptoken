@@ -13,11 +13,21 @@ import {
 } from "@mui/material";
 import { StoredCampaign } from "@/types/campaign";
 import NetworkSelector from "@/components/network-selector/network-selector";
-import { Network, Token, TokenAddress, TokenPrices } from "@/types/ethereum";
+import {
+  Network,
+  NetworkList,
+  Token,
+  TokenAddress,
+  TokenPrices,
+} from "@/types/ethereum";
 import { networkList } from "@/constants/networks";
 import TokenSelector from "@/components/token-selector/token-selector";
 import Image from "next/image";
 import CafeCrypto from "@/../public/CafeCrypto.png";
+import { useAccount } from "wagmi";
+import useTokenBalance from "@/hooks/useTokenBalance";
+
+const amountRegex = RegExp(/^[1-9]\d*$/);
 
 interface SupportCampaignFormProps {
   campaign: StoredCampaign;
@@ -28,41 +38,26 @@ interface SupportCampaignFormProps {
     networkName: string;
     tokens: TokenAddress[];
   }) => Promise<TokenPrices>;
+  allowedNetworks: NetworkList;
+  defaultNetwork: Network;
+  defaultToken: Token;
 }
 
 const SupportCampaignForm = ({
   campaign,
   handleGetTokensPrices,
+  allowedNetworks,
+  defaultNetwork,
+  defaultToken,
 }: SupportCampaignFormProps) => {
-  const [network, setNetwork] = React.useState<Network>(networkList["polygon"]);
-
-  const getDefaultToken = React.useCallback(
-    (chainId: number) =>
-      campaign.allowedTokens.find((tokenItem) => tokenItem.chainId === chainId),
-    [campaign]
-  );
-
-  const [token, setToken] = React.useState<Token | undefined>(
-    getDefaultToken(network.chainId)
-  );
+  const [network, setNetwork] = React.useState<Network>(defaultNetwork);
+  const [token, setToken] = React.useState<Token>(defaultToken);
   const [ccAmount, setCcAmount] = React.useState("");
   const [message, setMessage] = React.useState("");
   const [tokenPrices, setTokenPrices] = React.useState<TokenPrices>();
   const [isLoadingPrices, setIsLoadingPrices] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
-  const [success, setSuccess] = React.useState(false);
-
-  const handleNetworkChange = (chainId: number) => {
-    const newDefaultToken = getDefaultToken(chainId);
-    setToken(newDefaultToken);
-  };
-
-  const handleSupportCampaign = async () => {
-    // setIsLoading(true);
-    // await updateUser({ user_id: userId, name });
-    // setSuccess(true);
-    // setIsLoading(false);
-  };
+  const account = useAccount();
 
   const allowedTokens = React.useMemo(
     () =>
@@ -71,14 +66,6 @@ const SupportCampaignForm = ({
       ),
     [network, campaign]
   );
-
-  const allowedChains = React.useMemo(() => {
-    const uniqueChainIdsSet = new Set(
-      campaign.allowedTokens.map((token) => token.chainId)
-    );
-
-    return [...uniqueChainIdsSet];
-  }, [campaign]);
 
   React.useEffect(() => {
     const tokenAddresses = allowedTokens.map((token) => token.address);
@@ -92,13 +79,50 @@ const SupportCampaignForm = ({
       setIsLoadingPrices(false);
     };
     getData();
-  }, [network]);
+  }, [network, allowedTokens, handleGetTokensPrices]);
+
+  const { balance, isLoadingBalance } = useTokenBalance({
+    token,
+    walletAddress: account.address,
+  });
 
   const ccUsdValue = +ccAmount * campaign.cafeCryptoUnit;
   const tokenValue =
     token && tokenPrices && tokenPrices[token.address]
       ? ccUsdValue / tokenPrices[token.address]
       : undefined;
+
+  const handleNetworkChange = React.useCallback(
+    (chainId: number) => {
+      const newDefaultToken = campaign.allowedTokens.find(
+        (tokenItem) => tokenItem.chainId === chainId
+      );
+
+      if (newDefaultToken && allowedNetworks[chainId]) {
+        setToken(newDefaultToken);
+        setNetwork(allowedNetworks[chainId]);
+      }
+    },
+    [campaign, allowedNetworks]
+  );
+
+  const handleAmountChange = (newAmount: string) => {
+    if (!newAmount) {
+      setCcAmount("");
+    }
+
+    const parsedAmount = newAmount.replace(/,/g, ".");
+    if (amountRegex.test(parsedAmount.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))) {
+      setCcAmount(parsedAmount);
+    }
+  };
+
+  const handleSupportCampaign = async () => {
+    setIsLoading(true);
+    // await updateUser({ user_id: userId, name });
+    // setSuccess(true);
+    setIsLoading(false);
+  };
 
   return (
     <Box
@@ -110,16 +134,20 @@ const SupportCampaignForm = ({
     >
       <NetworkSelector
         value={network}
-        setValue={setNetwork}
         onChange={handleNetworkChange}
-        allowedChains={allowedChains}
+        allowedNetworks={allowedNetworks}
       />
-      <TokenSelector value={token} setValue={setToken} tokens={allowedTokens} />
+      <TokenSelector
+        value={token}
+        setValue={setToken}
+        tokens={allowedTokens}
+        balance={balance}
+        isLoadingBalance={isLoadingBalance}
+      />
       <FormControl variant="outlined">
         <OutlinedInput
           id="cc-amount"
           placeholder="☕ to send"
-          inputProps={{ min: 1, step: 1 }}
           endAdornment={
             <InputAdornment position="end">
               <Image
@@ -130,19 +158,18 @@ const SupportCampaignForm = ({
               />
             </InputAdornment>
           }
-          type="number"
           value={ccAmount}
-          onChange={(e) => setCcAmount(e.target.value)}
+          onChange={(e) => handleAmountChange(e.target.value)}
         />
         <FormHelperText>
           {isLoadingPrices ? (
             <Skeleton variant="text" width={100} />
-          ) : (
-            token &&
-            tokenValue &&
-            `${parseFloat(tokenValue.toFixed(3))} ${
+          ) : token ? (
+            `${parseFloat(tokenValue?.toFixed(3) || "0")} ${
               token.symbol
             } ≈ $${ccUsdValue.toFixed(2)}`
+          ) : (
+            "-"
           )}
         </FormHelperText>
       </FormControl>

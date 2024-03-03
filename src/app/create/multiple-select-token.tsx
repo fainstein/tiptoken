@@ -22,7 +22,7 @@ const MultipleSelectToken = ({
   selectedTokens,
   setSelectedTokens,
 }: MultipleSelectTokenProps) => {
-  const selectedNetwork = networkList.polygon.chainId;
+  const selectedNetwork = networkList[137].chainId;
 
   const handleChange = (event: SelectChangeEvent<typeof selectedTokens>) => {
     const selectedToken = event.target.value;
