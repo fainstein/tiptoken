@@ -28,9 +28,15 @@ export async function getOpenCampaigns(start = 0): Promise<StoredCampaign[]> {
   });
 }
 
-export async function getCampaign(campaignId: number): Promise<StoredCampaign> {
+export async function getCampaign(
+  campaignId: number
+): Promise<StoredCampaign | undefined> {
   const { rows: campaigns } =
     await sql<CampaignsRow>`SELECT * FROM campaigns WHERE campaign_id=${campaignId};`;
+
+  if (!campaigns.length) {
+    return;
+  }
 
   const { campaign_id, user_id } = campaigns[0];
   const { allowedTokens, ownerAddress } = await getCampaignExtraData(

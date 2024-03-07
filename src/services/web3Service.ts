@@ -3,18 +3,37 @@ import ContractService from "./contractService";
 import { GetClientReturnType, getClient } from "@wagmi/core";
 import ProviderService from "./providerService";
 import SdkService from "./sdkService";
+import WalletService from "./walletService";
 
 export default class Web3Service {
-  sdkService: SdkService;
+  private sdkService: SdkService;
 
-  providerService: ProviderService;
+  private providerService: ProviderService;
 
-  contractService: ContractService;
+  private contractService: ContractService;
+
+  private walletService: WalletService;
 
   constructor() {
     // Initialize services
     this.sdkService = new SdkService();
     this.providerService = new ProviderService(this.sdkService);
     this.contractService = new ContractService(this.providerService);
+    this.walletService = new WalletService(
+      this.providerService,
+      this.contractService
+    );
+  }
+
+  getWalletService() {
+    return this.walletService;
+  }
+
+  getContractService() {
+    return this.contractService;
+  }
+
+  getProviderService() {
+    return this.providerService;
   }
 }

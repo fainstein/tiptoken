@@ -18,14 +18,14 @@ const useTokenBalance = ({
     const getBalance = async () => {
       if (walletAddress) {
         setIsLoading(true);
-        const contract = contractService.getErc20Contract(token);
+        const contract = contractService.getERC20TokenInstance(token);
         const balance = await contract.read.balanceOf([walletAddress]);
         setBalance(balance);
         setIsLoading(false);
       }
     };
     void getBalance();
-  }, [token, walletAddress]);
+  }, [token, walletAddress, contractService]);
 
   return { balance, isLoadingBalance: isLoading };
 };

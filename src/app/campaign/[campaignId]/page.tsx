@@ -1,9 +1,10 @@
 import { getCampaign } from "@/app/api/campaign/getCampaigns";
 import SupportCampaignForm from "./support-campaign-form";
 import { Box, Typography } from "@mui/material";
-import { NetworkList, Token, TokenAddress } from "@/types/ethereum";
+import { NetworkList, TokenAddress } from "@/types/ethereum";
 import { getTokenPrices } from "@/app/api/defillama/getTokenPrices";
 import { networkList } from "@/constants/networks";
+import { redirect } from "next/navigation";
 
 const handleGetTokensPrices = async ({
   networkName,
@@ -22,6 +23,10 @@ export default async function Campaign({
   params: { campaignId: string };
 }) {
   const campaign = await getCampaign(Number(params.campaignId));
+
+  if (!campaign) {
+    redirect("/");
+  }
 
   const allowedNetworks = campaign.allowedTokens.reduce<NetworkList>(
     (acc, token) => {

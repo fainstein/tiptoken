@@ -3,12 +3,18 @@ import { Address } from "viem";
 export type ChainId = number;
 export type TokenAddress = Address;
 
+export enum TokenType {
+  NATIVE = "NATIVE",
+  ERC20 = "ERC20",
+}
+
 export interface Token {
   address: TokenAddress;
   symbol: string;
   name: string;
   decimals: number;
   chainId: ChainId;
+  type: TokenType;
 }
 
 export type TokenList = Record<ChainId, Record<TokenAddress, Token>>;

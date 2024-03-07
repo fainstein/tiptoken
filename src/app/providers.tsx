@@ -9,7 +9,7 @@ import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import theme from "../ui/theme";
 import WalletContext from "@/context/wallet-context";
 import Web3Service from "@/services/web3Service";
-import { headers } from "next/headers";
+import { SnackbarProvider } from "notistack";
 
 const Providers = ({
   children,
@@ -27,7 +27,7 @@ const Providers = ({
         <QueryClientProvider client={queryClient}>
           <ThemeProvider theme={theme}>
             <LocalizationProvider dateAdapter={AdapterLuxon}>
-              {children}
+              <SnackbarProvider>{children}</SnackbarProvider>
             </LocalizationProvider>
           </ThemeProvider>
         </QueryClientProvider>

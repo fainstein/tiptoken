@@ -1,4 +1,4 @@
-import { Chain, PublicClient, createPublicClient, http } from "viem";
+import { PublicClient } from "viem";
 import SdkService from "./sdkService";
 
 export default class ProviderService {

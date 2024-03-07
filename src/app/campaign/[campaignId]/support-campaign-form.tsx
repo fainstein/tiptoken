@@ -4,6 +4,7 @@ import React from "react";
 import {
   Box,
   Button,
+  CircularProgress,
   FormControl,
   FormHelperText,
   InputAdornment,
@@ -20,12 +21,14 @@ import {
   TokenAddress,
   TokenPrices,
 } from "@/types/ethereum";
-import { networkList } from "@/constants/networks";
 import TokenSelector from "@/components/token-selector/token-selector";
 import Image from "next/image";
 import CafeCrypto from "@/../public/CafeCrypto.png";
-import { useAccount } from "wagmi";
+import { useAccount, useWalletClient } from "wagmi";
 import useTokenBalance from "@/hooks/useTokenBalance";
+import { useSnackbar } from "notistack";
+import usewalletService from "@/hooks/services/useWalletService";
+import { parseUnits } from "viem";
 
 const amountRegex = RegExp(/^[1-9]\d*$/);
 
@@ -58,6 +61,9 @@ const SupportCampaignForm = ({
   const [isLoadingPrices, setIsLoadingPrices] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
   const account = useAccount();
+  const walletClient = useWalletClient();
+  const walletService = usewalletService();
+  const snackbar = useSnackbar();
 
   const allowedTokens = React.useMemo(
     () =>
@@ -119,9 +125,38 @@ const SupportCampaignForm = ({
 
   const handleSupportCampaign = async () => {
     setIsLoading(true);
-    // await updateUser({ user_id: userId, name });
-    // setSuccess(true);
-    setIsLoading(false);
+    const parsedAmount = parseUnits(
+      tokenValue?.toString() || "0",
+      token.decimals
+    );
+
+    if (!account.address || !balance || parsedAmount > balance) {
+      return;
+    }
+    try {
+      const txData = await walletService.transferToken({
+        from: account.address,
+        to: campaign.owner,
+        amount: parsedAmount,
+        signer: walletClient,
+        token,
+      });
+
+      snackbar.enqueueSnackbar({
+        variant: "success",
+        message: "Transaction submited",
+      });
+    } catch (e) {
+      console.error(e);
+      if (e instanceof Error) {
+        snackbar.enqueueSnackbar({
+          variant: "error",
+          message: e.message,
+        });
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -187,7 +222,7 @@ const SupportCampaignForm = ({
         onClick={handleSupportCampaign}
         disabled={isLoading}
       >
-        Send
+        {isLoading ? <CircularProgress /> : "Send"}
       </Button>
     </Box>
   );
