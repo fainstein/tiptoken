@@ -57,9 +57,10 @@ const CreateCampaignForm = ({
       allowedTokens: selectedTokens,
       signature: signMessageData,
       cafeCryptoUnit: +CCValue,
-      goalCC: +goalCC > 0 ? +goalCC : undefined,
+      goalCC: +goalCC > 0 ? +goalCC : null,
       owner,
       description,
+      endDate: null
     });
     setSuccess(campaignData?.campaignId ?? "");
     setUser({

@@ -13,6 +13,14 @@ export interface CampaignsTable {
   description: string;
 }
 
+export type CampaignsTableReturnType = Omit<
+  CampaignsTable,
+  "campaign_id" | "created_at"
+> & {
+  campaign_id: number;
+  created_at: Date;
+};
+
 export interface CampaignAllowedTokensRow {
   campaign_id: number;
   token_key: string;
@@ -22,6 +30,10 @@ export interface UsersTable {
   user_id: Generated<number>;
   address: string;
   name: string | null;
+}
+
+export interface StoredUser extends Omit<UsersTable, "user_id"> {
+  user_id: number;
 }
 
 export enum ValidPlatforms {

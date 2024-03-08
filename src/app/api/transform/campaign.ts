@@ -1,6 +1,6 @@
 import { tokenList } from "@/constants/tokenList";
 import { StoredCampaign } from "@/types/campaign";
-import { CampaignAllowedTokensRow, CampaignsTable } from "@/types/db";
+import { CampaignAllowedTokensRow, CampaignsTableReturnType } from "@/types/db";
 import { Token } from "@/types/ethereum";
 import { Address } from "viem";
 
@@ -9,7 +9,7 @@ export const transformCampaigns = ({
   allowedTokens,
   ownerAddress,
 }: {
-  campaigns: CampaignsTable[];
+  campaigns: CampaignsTableReturnType[];
   allowedTokens: CampaignAllowedTokensRow[];
   ownerAddress: string;
 }): StoredCampaign[] => {
@@ -32,6 +32,7 @@ export const transformCampaigns = ({
       goal_cc,
       cafe_crypto_unit,
       user_id,
+      description,
     }) => ({
       campaignId: campaign_id,
       createdAt: created_at,
@@ -44,6 +45,7 @@ export const transformCampaigns = ({
       allowedTokens: parsedAllowedTokens,
       owner: ownerAddress as Address,
       userId: user_id,
+      description,
     })
   );
 

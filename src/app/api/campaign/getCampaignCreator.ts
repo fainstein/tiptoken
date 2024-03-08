@@ -1,18 +1,26 @@
 import { sql } from "@vercel/postgres";
-import { SocialMediaLinksRow, UsersRow } from "../../../types/db";
+import { SocialMediaLinksRow } from "../../../types/db";
 import { NewUser, User } from "../../../types/user";
 import { Address } from "viem";
+import { db } from "@/lib/kysely";
 
 export async function getCampaignCreator(
   userId: number
 ): Promise<User | NewUser> {
-  const { rows: userRows } =
-    await sql<UsersRow>`SELECT * from users WHERE user_id=${userId};`;
+  const user = await db
+    .selectFrom("users")
+    .selectAll()
+    .where("user_id", "=", userId)
+    .executeTakeFirst();
+
+  if (!user) {
+    throw new Error(`No creator was found with an id of ${userId}`);
+  }
 
   const baseUser = {
-    user_id: userRows[0].user_id,
-    address: userRows[0].address as Address,
-    name: userRows[0].name,
+    user_id: user.user_id,
+    address: user.address as Address,
+    name: user.name,
   };
 
   if (!baseUser.name) {
