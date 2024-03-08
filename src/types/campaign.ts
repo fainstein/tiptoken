@@ -8,6 +8,7 @@ export interface BaseCampaign {
   goalCC?: number;
   endDate?: Date;
   owner: Address;
+  description: string
 }
 
 export interface StoredCampaign extends BaseCampaign {

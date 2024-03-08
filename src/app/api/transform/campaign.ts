@@ -1,6 +1,6 @@
 import { tokenList } from "@/constants/tokenList";
 import { StoredCampaign } from "@/types/campaign";
-import { CampaignAllowedTokensRow, CampaignsRow } from "@/types/db";
+import { CampaignAllowedTokensRow, CampaignsTable } from "@/types/db";
 import { Token } from "@/types/ethereum";
 import { Address } from "viem";
 
@@ -9,7 +9,7 @@ export const transformCampaigns = ({
   allowedTokens,
   ownerAddress,
 }: {
-  campaigns: CampaignsRow[];
+  campaigns: CampaignsTable[];
   allowedTokens: CampaignAllowedTokensRow[];
   ownerAddress: string;
 }): StoredCampaign[] => {

@@ -1,5 +1,5 @@
 import { sql } from "@vercel/postgres";
-import { CampaignAllowedTokensRow, CampaignsRow } from "../../../types/db";
+import { CampaignAllowedTokensRow, CampaignsTable } from "../../../types/db";
 import { StoredCampaign } from "@/types/campaign";
 import { transformCampaigns } from "../transform/campaign";
 import { getCampaignAvailableTokens } from "./getCampaignAvailableTokens";
@@ -19,7 +19,7 @@ const getCampaignExtraData = async (
 
 export async function getOpenCampaigns(start = 0): Promise<StoredCampaign[]> {
   const { rows: campaigns } =
-    await sql<CampaignsRow>`SELECT campaign_id, name, cafe_crypto_unit, goal_cc, end_date, total_received, user_id FROM campaigns WHERE is_open=true ORDER BY created_at LIMIT 20 OFFSET ${start};`;
+    await sql<CampaignsTable>`SELECT campaign_id, name, cafe_crypto_unit, goal_cc, end_date, total_received, user_id FROM campaigns WHERE is_open=true ORDER BY created_at LIMIT 20 OFFSET ${start};`;
 
   return transformCampaigns({
     campaigns,
@@ -32,7 +32,7 @@ export async function getCampaign(
   campaignId: number
 ): Promise<StoredCampaign | undefined> {
   const { rows: campaigns } =
-    await sql<CampaignsRow>`SELECT * FROM campaigns WHERE campaign_id=${campaignId};`;
+    await sql<CampaignsTable>`SELECT * FROM campaigns WHERE campaign_id=${campaignId};`;
 
   if (!campaigns.length) {
     return;
@@ -55,7 +55,7 @@ export async function getUserCampaigns(
   userId: number
 ): Promise<StoredCampaign[]> {
   const { rows: campaigns } =
-    await sql<CampaignsRow>`SELECT * from campaigns WHERE user_id=${userId};`;
+    await sql<CampaignsTable>`SELECT * from campaigns WHERE user_id=${userId};`;
 
   return transformCampaigns({
     campaigns,
