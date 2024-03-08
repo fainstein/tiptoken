@@ -5,6 +5,8 @@ import { NetworkList, TokenAddress } from "@/types/ethereum";
 import { getTokenPrices } from "@/app/api/defillama/getTokenPrices";
 import { networkList } from "@/constants/networks";
 import { redirect } from "next/navigation";
+import { postCampaignTransaction } from "@/app/api/transactions/postCampaignTransaction";
+import { PostcampaignTransaction } from "@/types/transactions";
 
 const handleGetTokensPrices = async ({
   networkName,
@@ -15,6 +17,14 @@ const handleGetTokensPrices = async ({
 }) => {
   "use server";
   return await getTokenPrices({ networkName, tokens });
+};
+
+const handlePostCampaignTransaction = async (
+  campaignTransactionData: PostcampaignTransaction
+) => {
+  "use server";
+
+  await postCampaignTransaction(campaignTransactionData);
 };
 
 export default async function Campaign({
@@ -50,6 +60,7 @@ export default async function Campaign({
       <SupportCampaignForm
         campaign={campaign}
         handleGetTokensPrices={handleGetTokensPrices}
+        handlePostCampaignTransaction={handlePostCampaignTransaction}
         allowedNetworks={allowedNetworks}
         defaultNetwork={defaultNetwork}
         defaultToken={defaultToken}

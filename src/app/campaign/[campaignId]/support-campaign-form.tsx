@@ -11,6 +11,7 @@ import {
   OutlinedInput,
   Skeleton,
   TextField,
+  Typography,
 } from "@mui/material";
 import { StoredCampaign } from "@/types/campaign";
 import NetworkSelector from "@/components/network-selector/network-selector";
@@ -29,6 +30,7 @@ import useTokenBalance from "@/hooks/useTokenBalance";
 import { useSnackbar } from "notistack";
 import usewalletService from "@/hooks/services/useWalletService";
 import { parseUnits } from "viem";
+import { PostcampaignTransaction } from "@/types/transactions";
 
 const amountRegex = RegExp(/^[1-9]\d*$/);
 
@@ -41,6 +43,9 @@ interface SupportCampaignFormProps {
     networkName: string;
     tokens: TokenAddress[];
   }) => Promise<TokenPrices>;
+  handlePostCampaignTransaction: (
+    campaignTransactionData: PostcampaignTransaction
+  ) => Promise<void>;
   allowedNetworks: NetworkList;
   defaultNetwork: Network;
   defaultToken: Token;
@@ -52,6 +57,7 @@ const SupportCampaignForm = ({
   allowedNetworks,
   defaultNetwork,
   defaultToken,
+  handlePostCampaignTransaction,
 }: SupportCampaignFormProps) => {
   const [network, setNetwork] = React.useState<Network>(defaultNetwork);
   const [token, setToken] = React.useState<Token>(defaultToken);
@@ -142,6 +148,23 @@ const SupportCampaignForm = ({
         token,
       });
 
+      if (!txData) {
+        throw new Error("There was an issue while creating your transaction");
+      }
+
+      const parsedTransactionDbData: PostcampaignTransaction = {
+        campaignId: campaign.campaignId,
+        ccAmount: +ccAmount,
+        chainId: token.chainId,
+        hash: txData.hash,
+        senderAddress: account.address,
+        tokenAddress: token.address,
+        tokenAmount: parsedAmount,
+        senderMessage: message,
+      };
+
+      void handlePostCampaignTransaction(parsedTransactionDbData);
+
       snackbar.enqueueSnackbar({
         variant: "success",
         message: "Transaction submited",
@@ -167,6 +190,7 @@ const SupportCampaignForm = ({
       gap={3}
       maxWidth="sm"
     >
+      <Typography variant="body1">Sending to {campaign.owner}</Typography>
       <NetworkSelector
         value={network}
         onChange={handleNetworkChange}

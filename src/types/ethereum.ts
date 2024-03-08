@@ -25,17 +25,6 @@ export interface AmountsOfToken {
   amountUSD: number;
 }
 
-export interface SupportCampaignTx {
-  txHash: Address;
-  token: Token;
-  amount: AmountsOfToken;
-  from: Address;
-  to: Address;
-  timestamp: number;
-  chainId: ChainId;
-  gas: AmountsOfToken;
-}
-
 export interface Network {
   name: string;
   chainId: ChainId;
