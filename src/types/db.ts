@@ -1,3 +1,5 @@
+import { Generated } from "kysely";
+
 export interface CampaignsRow {
   campaign_id: number;
   name: string;
@@ -33,4 +35,17 @@ export interface SocialMediaLinksRow {
   user_id: number;
   platform: `${ValidPlatforms}`;
   username: string;
+}
+
+export interface CampaignTransactionsTable {
+  transaction_id: Generated<number>;
+  hash: string;
+  sender_address: string;
+  campaign_id: number;
+  created_at: Generated<Date>;
+  chain_id: number;
+  token_address: string;
+  token_amount: bigint;
+  cc_amount: number;
+  sender_message: string;
 }

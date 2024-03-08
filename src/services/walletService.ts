@@ -3,7 +3,6 @@ import {
   Address,
   PrepareTransactionRequestParameters,
   encodeFunctionData,
-  getChainContractAddress,
 } from "viem";
 import ProviderService from "./providerService";
 import ContractService from "./contractService";
@@ -67,11 +66,7 @@ export default class WalletService {
       };
     }
     const preparedTx = await signer.data?.prepareTransactionRequest(txData);
-
-    return {
-      ...preparedTx,
-      chainId: token.chainId,
-    };
+    return preparedTx;
   }
 
   async transferToken({
@@ -86,7 +81,12 @@ export default class WalletService {
     token: Token;
     amount: bigint;
     signer: UseWalletClientReturnType;
-  }) {
+  }): Promise<
+    | {
+        hash: Address;
+      }
+    | undefined
+  > {
     const txToSend = await this.getTransferTokenTx({
       from,
       to,
@@ -94,16 +94,23 @@ export default class WalletService {
       amount,
       signer,
     });
-    console.log("txToSend", txToSend);
+
+    if (!txToSend) {
+      return;
+    }
+
     const hash = await signer.data?.sendTransaction({
       ...txToSend,
       account: from,
       chain: null,
     });
 
+    if (!hash) {
+      return;
+    }
+
     return {
       hash,
-      from,
     };
   }
 }

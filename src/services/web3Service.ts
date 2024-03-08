@@ -1,6 +1,4 @@
-import { Config } from "wagmi";
 import ContractService from "./contractService";
-import { GetClientReturnType, getClient } from "@wagmi/core";
 import ProviderService from "./providerService";
 import SdkService from "./sdkService";
 import WalletService from "./walletService";
@@ -21,7 +19,7 @@ export default class Web3Service {
     this.contractService = new ContractService(this.providerService);
     this.walletService = new WalletService(
       this.providerService,
-      this.contractService
+      this.contractService,
     );
   }
 
