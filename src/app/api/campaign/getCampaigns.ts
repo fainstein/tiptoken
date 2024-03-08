@@ -1,9 +1,9 @@
-import { sql } from "@vercel/postgres";
-import { CampaignAllowedTokensRow, CampaignsRow } from "../../../types/db";
-import { StoredCampaign } from "@/types/campaign";
+import { CampaignAllowedTokensRow, CampaignsTable } from "../../../types/db";
+import { OpenCampaign, StoredCampaign } from "@/types/campaign";
 import { transformCampaigns } from "../transform/campaign";
 import { getCampaignAvailableTokens } from "./getCampaignAvailableTokens";
 import { getUser } from "../user/getUser";
+import { db } from "@/lib/kysely";
 
 const getCampaignExtraData = async (
   campaignId: number,
@@ -17,12 +17,29 @@ const getCampaignExtraData = async (
   return { allowedTokens, ownerAddress: user.address };
 };
 
-export async function getOpenCampaigns(start = 0): Promise<StoredCampaign[]> {
-  const { rows: campaigns } =
-    await sql<CampaignsRow>`SELECT campaign_id, name, cafe_crypto_unit, goal_cc, end_date, total_received, user_id FROM campaigns WHERE is_open=true ORDER BY created_at LIMIT 20 OFFSET ${start};`;
+export async function getOpenCampaigns(start = 0): Promise<OpenCampaign[]> {
+  const campaigns = await db
+    .selectFrom("campaigns")
+    .select([
+      "campaign_id",
+      "name",
+      "cafe_crypto_unit",
+      "goal_cc",
+      "end_date",
+      "user_id",
+      "total_received",
+      "is_open",
+      "description",
+      "created_at",
+    ])
+    .where("is_open", "=", true)
+    .orderBy("created_at")
+    .limit(20)
+    .offset(start)
+    .execute();
 
   return transformCampaigns({
-    campaigns,
+    campaigns: [...campaigns],
     allowedTokens: [],
     ownerAddress: "0x",
   });
@@ -31,21 +48,24 @@ export async function getOpenCampaigns(start = 0): Promise<StoredCampaign[]> {
 export async function getCampaign(
   campaignId: number
 ): Promise<StoredCampaign | undefined> {
-  const { rows: campaigns } =
-    await sql<CampaignsRow>`SELECT * FROM campaigns WHERE campaign_id=${campaignId};`;
+  const campaign = await db
+    .selectFrom("campaigns")
+    .selectAll()
+    .where("campaign_id", "=", campaignId)
+    .executeTakeFirst();
 
-  if (!campaigns.length) {
+  if (!campaign) {
     return;
   }
 
-  const { campaign_id, user_id } = campaigns[0];
+  const { campaign_id, user_id } = campaign;
   const { allowedTokens, ownerAddress } = await getCampaignExtraData(
     campaign_id,
     user_id
   );
 
   return transformCampaigns({
-    campaigns,
+    campaigns: [campaign],
     allowedTokens,
     ownerAddress,
   })[0];
@@ -54,8 +74,11 @@ export async function getCampaign(
 export async function getUserCampaigns(
   userId: number
 ): Promise<StoredCampaign[]> {
-  const { rows: campaigns } =
-    await sql<CampaignsRow>`SELECT * from campaigns WHERE user_id=${userId};`;
+  const campaigns = await db
+    .selectFrom("campaigns")
+    .selectAll()
+    .where("user_id", "=", userId)
+    .execute();
 
   return transformCampaigns({
     campaigns,

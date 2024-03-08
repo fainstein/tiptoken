@@ -37,6 +37,7 @@ const CreateCampaignForm = ({
   const [isLoading, setIsLoading] = React.useState(false);
   const [success, setSuccess] = React.useState("");
   const [user, setUser] = React.useState<{ id?: number; isNew?: boolean }>();
+  const [description, setDescription] = React.useState("");
   const { signMessageAsync } = useSignMessage();
   const { address: owner } = useAccount();
 
@@ -56,8 +57,10 @@ const CreateCampaignForm = ({
       allowedTokens: selectedTokens,
       signature: signMessageData,
       cafeCryptoUnit: +CCValue,
-      goalCC: +goalCC > 0 ? +goalCC : undefined,
+      goalCC: +goalCC > 0 ? +goalCC : null,
       owner,
+      description,
+      endDate: null
     });
     setSuccess(campaignData?.campaignId ?? "");
     setUser({
@@ -65,6 +68,13 @@ const CreateCampaignForm = ({
       id: campaignData?.creator.user_id,
     });
     setIsLoading(false);
+  };
+
+  const handleCcValueChange = (newValue: string) => {
+    const inputRegex = RegExp(/^[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)$/);
+    if (inputRegex.test(newValue) || newValue === "") {
+      setCCValue(newValue);
+    }
   };
 
   return (
@@ -122,9 +132,8 @@ const CreateCampaignForm = ({
               placeholder="☕ value"
               inputProps={{ min: 1, step: 1 }}
               endAdornment={<InputAdornment position="end">USD</InputAdornment>}
-              type="number"
               value={CCValue}
-              onChange={(e) => setCCValue(e.target.value)}
+              onChange={(e) => handleCcValueChange(e.target.value)}
             />
             <FormHelperText>
               This is the minimum amount you will receive for each donation
@@ -136,9 +145,8 @@ const CreateCampaignForm = ({
               placeholder="Goal"
               inputProps={{ min: 1, step: 1 }}
               endAdornment={<InputAdornment position="end">☕</InputAdornment>}
-              type="number"
               value={goalCC}
-              onChange={(e) => setGoalCC(e.target.value)}
+              onChange={(e) => setGoalCC(e.target.value.replace(/[^0-9]/g, ""))}
             />
             {goalCC && (
               <FormHelperText>
@@ -146,6 +154,14 @@ const CreateCampaignForm = ({
               </FormHelperText>
             )}
           </FormControl>
+          <TextField
+            id="multiline-message"
+            label="Description (optional)"
+            multiline
+            rows={4}
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          />
           <Button
             variant="contained"
             size="large"

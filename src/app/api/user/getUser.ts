@@ -1,8 +1,12 @@
-import { UsersRow } from "@/types/db";
-import { sql } from "@vercel/postgres";
+import { db } from "@/lib/kysely";
+import { StoredUser } from "@/types/db";
 
-export async function getUser(userId: number): Promise<UsersRow> {
-  const { rows } =
-    await sql<UsersRow>`SELECT * FROM users WHERE user_id=${userId};`;
-  return rows[0];
+export async function getUser(userId: number): Promise<StoredUser> {
+  const user = await db
+    .selectFrom("users")
+    .selectAll()
+    .where("user_id", "=", userId)
+    .executeTakeFirstOrThrow();
+
+  return user;
 }

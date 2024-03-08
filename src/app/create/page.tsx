@@ -13,6 +13,7 @@ async function handlePostCampaign({
   cafeCryptoUnit,
   goalCC,
   owner,
+  description,
 }: NewCampaign) {
   "use server";
   const message = generateMessage();
@@ -42,6 +43,7 @@ async function handlePostCampaign({
       cafeCryptoUnit,
       goalCC,
       owner: recoveredAddress.toLowerCase() as typeof recoveredAddress,
+      description,
     });
 
     return { campaignId: campaign_id.toString(), creator };

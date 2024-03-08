@@ -1,26 +1,39 @@
 import { Generated } from "kysely";
 
-export interface CampaignsRow {
-  campaign_id: number;
+export interface CampaignsTable {
+  campaign_id: Generated<number>;
   name: string;
   cafe_crypto_unit: number;
-  goal_cc?: number;
-  end_date?: Date;
+  goal_cc: number | null;
+  end_date: Date | null;
   user_id: number;
   total_received: number;
   is_open: boolean;
-  created_at: Date;
+  created_at: Generated<Date>;
+  description: string;
 }
+
+export type CampaignsTableReturnType = Omit<
+  CampaignsTable,
+  "campaign_id" | "created_at"
+> & {
+  campaign_id: number;
+  created_at: Date;
+};
 
 export interface CampaignAllowedTokensRow {
   campaign_id: number;
   token_key: string;
 }
 
-export interface UsersRow {
-  user_id: number;
+export interface UsersTable {
+  user_id: Generated<number>;
   address: string;
-  name?: string;
+  name: string | null;
+}
+
+export interface StoredUser extends Omit<UsersTable, "user_id"> {
+  user_id: number;
 }
 
 export enum ValidPlatforms {
