@@ -7,7 +7,7 @@ import { generateMessage } from "../../utils/address";
 
 async function handlePostCampaign({
   signature,
-  allowedTokens,
+  allowedChainIds,
   name,
   endDate,
   cafeCryptoUnit,
@@ -32,12 +32,9 @@ async function handlePostCampaign({
     throw new Error("Message signed with another address");
   }
 
-  const allowedTokenKeys = allowedTokens.map(
-    (token) => `${token.chainId}-${token.address}`
-  );
   try {
     const { campaign_id, creator } = await postCampaign({
-      allowedTokens: allowedTokenKeys,
+      allowedChainIds,
       name,
       endDate,
       cafeCryptoUnit,

@@ -1,9 +1,8 @@
 import { Address } from "viem";
-import { Token } from "./ethereum";
 
 export interface BaseCampaign {
   name: string;
-  allowedTokens: Token[];
+  allowedChainIds: number[];
   cafeCryptoUnit: number;
   goalCC: number | null;
   endDate: Date | null;
@@ -30,8 +29,4 @@ export type StoredCampaign = OpenCampaign | CompleteCampaign;
 
 export interface NewCampaign extends BaseCampaign {
   signature: Address;
-}
-
-export interface PostCampaign extends Omit<BaseCampaign, "allowedTokens"> {
-  allowedTokens: string[];
 }
