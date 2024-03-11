@@ -1,7 +1,6 @@
 import React from "react";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { Network, NetworkList } from "@/types/ethereum";
-import { networkList } from "@/constants/networks";
 
 interface NetworkSelectorProps {
   value: Network;
@@ -20,7 +19,7 @@ const NetworkSelector = ({
       <Select
         labelId="network-selector-label"
         id="network-selector"
-        value={value.chainId.toString()}
+        value={value.chainId}
         onChange={(e) => onChange(+e.target.value)}
         label="Network"
       >

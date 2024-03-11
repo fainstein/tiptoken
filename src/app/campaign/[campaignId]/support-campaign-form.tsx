@@ -94,16 +94,17 @@ const SupportCampaignForm = ({
 
   const handleNetworkChange = React.useCallback(
     (chainId: number) => {
-      const newDefaultToken = Object.values(
-        tokenList[campaign.allowedChainIds[0]]
-      )[0];
+      const newNetwork = allowedNetworks.find(
+        (network) => network.chainId === chainId
+      );
 
-      if (newDefaultToken && allowedNetworks[chainId]) {
+      if (newNetwork) {
+        const newDefaultToken = Object.values(tokenList[chainId])[0];
         setToken(newDefaultToken);
-        setNetwork(allowedNetworks[chainId]);
+        setNetwork(newNetwork);
       }
     },
-    [campaign, allowedNetworks]
+    [allowedNetworks]
   );
 
   const handleAmountChange = (newAmount: string) => {
