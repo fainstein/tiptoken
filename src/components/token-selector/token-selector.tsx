@@ -8,13 +8,14 @@ import {
   Select,
   Skeleton,
 } from "@mui/material";
-import { Token } from "@/types/ethereum";
+import { Network, Token } from "@/types/ethereum";
 import { Address, formatUnits } from "viem";
+import { tokenList } from "@/constants/tokenList";
 
 interface TokenSelectorProps {
   value: Token;
   setValue: React.Dispatch<React.SetStateAction<Token>>;
-  tokens: Token[];
+  network: Network;
   balance?: bigint;
   isLoadingBalance?: boolean;
 }
@@ -22,10 +23,15 @@ interface TokenSelectorProps {
 const TokenSelector = ({
   value,
   setValue,
-  tokens,
+  network,
   balance,
   isLoadingBalance,
 }: TokenSelectorProps) => {
+  const tokens = React.useMemo(
+    () => Object.values(tokenList[network.chainId]),
+    [network]
+  );
+
   const handleChange = (address: Address) => {
     const selectedToken = tokens.find((token) => token.address === address);
     if (selectedToken) {

@@ -21,9 +21,14 @@ export type CampaignsTableReturnType = Omit<
   created_at: Date;
 };
 
-export interface CampaignAllowedTokensRow {
+export interface CampaignAllowedChainsTable {
+  campaign_id: Generated<number>;
+  chain_id: number;
+}
+
+export interface StoredCampaignAllowedChains
+  extends Omit<CampaignAllowedChainsTable, "campaign_id"> {
   campaign_id: number;
-  token_key: string;
 }
 
 export interface UsersTable {

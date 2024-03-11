@@ -1,20 +1,20 @@
-import { CampaignAllowedTokensRow, CampaignsTable } from "../../../types/db";
 import { OpenCampaign, StoredCampaign } from "@/types/campaign";
 import { transformCampaigns } from "../transform/campaign";
-import { getCampaignAvailableTokens } from "./getCampaignAvailableTokens";
 import { getUser } from "../user/getUser";
 import { db } from "@/lib/kysely";
+import { StoredCampaignAllowedChains } from "@/types/db";
+import { getCampaignAllowedChains } from "./getCampaignAllowedTokens";
 
 const getCampaignExtraData = async (
   campaignId: number,
   userId: number
 ): Promise<{
-  allowedTokens: CampaignAllowedTokensRow[];
+  allowedChains: StoredCampaignAllowedChains[];
   ownerAddress: string;
 }> => {
-  const allowedTokens = await getCampaignAvailableTokens(campaignId);
+  const allowedChains = await getCampaignAllowedChains(campaignId);
   const user = await getUser(userId);
-  return { allowedTokens, ownerAddress: user.address };
+  return { allowedChains, ownerAddress: user.address };
 };
 
 export async function getOpenCampaigns(start = 0): Promise<OpenCampaign[]> {
@@ -40,7 +40,7 @@ export async function getOpenCampaigns(start = 0): Promise<OpenCampaign[]> {
 
   return transformCampaigns({
     campaigns: [...campaigns],
-    allowedTokens: [],
+    allowedChains: [],
     ownerAddress: "0x",
   });
 }
@@ -59,14 +59,14 @@ export async function getCampaign(
   }
 
   const { campaign_id, user_id } = campaign;
-  const { allowedTokens, ownerAddress } = await getCampaignExtraData(
+  const { allowedChains, ownerAddress } = await getCampaignExtraData(
     campaign_id,
     user_id
   );
 
   return transformCampaigns({
     campaigns: [campaign],
-    allowedTokens,
+    allowedChains,
     ownerAddress,
   })[0];
 }
@@ -82,7 +82,7 @@ export async function getUserCampaigns(
 
   return transformCampaigns({
     campaigns,
-    allowedTokens: [],
+    allowedChains: [],
     ownerAddress: "0x",
   });
 }

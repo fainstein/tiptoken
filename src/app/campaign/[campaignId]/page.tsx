@@ -7,6 +7,7 @@ import { networkList } from "@/constants/networks";
 import { redirect } from "next/navigation";
 import { postCampaignTransaction } from "@/app/api/transactions/postCampaignTransaction";
 import { PostcampaignTransaction } from "@/types/transactions";
+import { tokenList } from "@/constants/tokenList";
 
 const handleGetTokensPrices = async ({
   networkName,
@@ -38,21 +39,11 @@ export default async function Campaign({
     redirect("/");
   }
 
-  const allowedNetworks = campaign.allowedTokens.reduce<NetworkList>(
-    (acc, token) => {
-      const newAcc = { ...acc };
-      if (!newAcc[token.chainId]) {
-        newAcc[token.chainId] = networkList[token.chainId];
-      }
-      return newAcc;
-    },
-    {}
+  const allowedNetworks = Object.values(networkList).filter((network) =>
+    campaign.allowedChainIds.includes(network.chainId)
   );
-
-  const defaultNetwork = Object.values(allowedNetworks)[0];
-  const defaultToken = campaign.allowedTokens.find(
-    (tokenItem) => tokenItem.chainId === defaultNetwork.chainId
-  )!; //defaultToken should ALWAYS exist
+  const defaultNetwork = allowedNetworks[0];
+  const defaultToken = Object.values(tokenList[defaultNetwork.chainId])[0];
 
   return (
     <Box display="flex" gap={12} flexDirection="column">

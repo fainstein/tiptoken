@@ -11,58 +11,51 @@ import {
 } from "@mui/material";
 import { tokenList } from "../../constants/tokenList";
 import { networkList } from "../../constants/networks";
-import { Token } from "../../types/ethereum";
 
 interface MultipleSelectTokenProps {
-  selectedTokens: Token[];
-  setSelectedTokens: React.Dispatch<React.SetStateAction<Token[]>>;
+  selectedChains: string[];
+  setSelectedChains: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
 const MultipleSelectToken = ({
-  selectedTokens,
-  setSelectedTokens,
+  selectedChains,
+  setSelectedChains,
 }: MultipleSelectTokenProps) => {
-  const selectedNetwork = networkList[137].chainId;
-
-  const handleChange = (event: SelectChangeEvent<typeof selectedTokens>) => {
-    const selectedToken = event.target.value;
-    if (typeof selectedToken === "string") {
+  const handleChange = (event: SelectChangeEvent<typeof selectedChains>) => {
+    const selectedChain = event.target.value;
+    if (typeof selectedChain === "string") {
       return;
     }
 
-    setSelectedTokens(selectedToken);
+    setSelectedChains(selectedChain);
   };
-
-  const allowedTokens = React.useMemo(
-    () => Object.values(tokenList[selectedNetwork]),
-    [selectedNetwork]
-  );
 
   return (
     <FormControl variant="outlined">
-      <InputLabel htmlFor="allowed-tokens">Allowed tokens</InputLabel>
+      <InputLabel htmlFor="allowed-networks">Allowed networks</InputLabel>
       <Select
         multiple
-        value={selectedTokens}
-        placeholder="Select tokens"
+        value={selectedChains}
+        placeholder="Select chains"
         onChange={handleChange}
-        labelId="allowed-tokens"
+        labelId="allowed-networks"
         variant="outlined"
-        input={<OutlinedInput id="allowed-tokens" label="Allowed tokens" />}
+        input={<OutlinedInput id="allowed-networks" label="Allowed networks" />}
         renderValue={(selected) => (
-          <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-            {selected.map((token) => (
-              <Chip key={token.address} label={token.symbol} />
+          <Box
+            display="flex"
+            gap={0.5}
+            flexWrap="wrap"
+          >
+            {selected.map((chainId) => (
+              <Chip key={chainId} label={networkList[+chainId].name} />
             ))}
           </Box>
         )}
       >
-        {allowedTokens.map((token) => (
-          <MenuItem
-            key={`${token.chainId}-${token.address}`}
-            value={token as any}
-          >
-            {token.symbol}
+        {Object.values(networkList).map((chain) => (
+          <MenuItem key={chain.chainId} value={chain.chainId.toString()}>
+            {chain.name}
           </MenuItem>
         ))}
       </Select>

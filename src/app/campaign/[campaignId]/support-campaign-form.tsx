@@ -15,13 +15,7 @@ import {
 } from "@mui/material";
 import { StoredCampaign } from "@/types/campaign";
 import NetworkSelector from "@/components/network-selector/network-selector";
-import {
-  Network,
-  NetworkList,
-  Token,
-  TokenAddress,
-  TokenPrices,
-} from "@/types/ethereum";
+import { Network, Token, TokenAddress, TokenPrices } from "@/types/ethereum";
 import TokenSelector from "@/components/token-selector/token-selector";
 import Image from "next/image";
 import CafeCrypto from "@/../public/CafeCrypto.png";
@@ -31,6 +25,7 @@ import { useSnackbar } from "notistack";
 import usewalletService from "@/hooks/services/useWalletService";
 import { parseUnits } from "viem";
 import { PostcampaignTransaction } from "@/types/transactions";
+import { tokenList } from "@/constants/tokenList";
 
 const amountRegex = RegExp(/^[1-9]\d*$/);
 
@@ -46,7 +41,7 @@ interface SupportCampaignFormProps {
   handlePostCampaignTransaction: (
     campaignTransactionData: PostcampaignTransaction
   ) => Promise<void>;
-  allowedNetworks: NetworkList;
+  allowedNetworks: Network[];
   defaultNetwork: Network;
   defaultToken: Token;
 }
@@ -71,16 +66,10 @@ const SupportCampaignForm = ({
   const walletService = usewalletService();
   const snackbar = useSnackbar();
 
-  const allowedTokens = React.useMemo(
-    () =>
-      campaign.allowedTokens.filter(
-        (token) => token.chainId === network.chainId
-      ),
-    [network, campaign]
-  );
-
   React.useEffect(() => {
-    const tokenAddresses = allowedTokens.map((token) => token.address);
+    const tokenAddresses = Object.values(tokenList[network.chainId]).map(
+      (token) => token.address
+    );
     const getData = async () => {
       setIsLoadingPrices(true);
       const prices = await handleGetTokensPrices({
@@ -90,9 +79,8 @@ const SupportCampaignForm = ({
       setTokenPrices(prices);
       setIsLoadingPrices(false);
     };
-    getData();
-  }, [network, allowedTokens, handleGetTokensPrices]);
-
+    void getData();
+  }, [network, handleGetTokensPrices]);
   const { balance, isLoadingBalance } = useTokenBalance({
     token,
     walletAddress: account.address,
@@ -106,9 +94,9 @@ const SupportCampaignForm = ({
 
   const handleNetworkChange = React.useCallback(
     (chainId: number) => {
-      const newDefaultToken = campaign.allowedTokens.find(
-        (tokenItem) => tokenItem.chainId === chainId
-      );
+      const newDefaultToken = Object.values(
+        tokenList[campaign.allowedChainIds[0]]
+      )[0];
 
       if (newDefaultToken && allowedNetworks[chainId]) {
         setToken(newDefaultToken);
@@ -199,7 +187,7 @@ const SupportCampaignForm = ({
       <TokenSelector
         value={token}
         setValue={setToken}
-        tokens={allowedTokens}
+        network={network}
         balance={balance}
         isLoadingBalance={isLoadingBalance}
       />

@@ -20,6 +20,7 @@ import { CheckCircleOutline } from "@mui/icons-material";
 import { ContainerBox } from "../../ui/components/container-box";
 import { NewUser, User } from "../../types/user";
 import Link from "next/link";
+import { networkList } from "@/constants/networks";
 
 interface CreateCampaignFormProps {
   handlePostCampaign: (
@@ -30,7 +31,9 @@ interface CreateCampaignFormProps {
 const CreateCampaignForm = ({
   handlePostCampaign,
 }: CreateCampaignFormProps) => {
-  const [selectedTokens, setSelectedTokens] = React.useState<Token[]>([]);
+  const [selectedChains, setSelectedChains] = React.useState<string[]>(
+    Object.keys(networkList)
+  );
   const [name, setName] = React.useState("");
   const [goalCC, setGoalCC] = React.useState("");
   const [CCValue, setCCValue] = React.useState("");
@@ -42,7 +45,7 @@ const CreateCampaignForm = ({
   const { address: owner } = useAccount();
 
   const handleCreateCampaign = async () => {
-    if (!name || selectedTokens.length === 0 || !owner || !+CCValue) {
+    if (!name || selectedChains.length === 0 || !owner || !+CCValue) {
       return;
     }
 
@@ -52,15 +55,18 @@ const CreateCampaignForm = ({
       account: owner,
     });
     setIsLoading(true);
+
+    const allowedChainIds = selectedChains.map((chainId) => Number(chainId));
+
     const campaignData = await handlePostCampaign({
       name,
-      allowedTokens: selectedTokens,
+      allowedChainIds,
       signature: signMessageData,
       cafeCryptoUnit: +CCValue,
       goalCC: +goalCC > 0 ? +goalCC : null,
       owner,
       description,
-      endDate: null
+      endDate: null,
     });
     setSuccess(campaignData?.campaignId ?? "");
     setUser({
@@ -123,8 +129,8 @@ const CreateCampaignForm = ({
             onChange={(e) => setName(e.target.value)}
           />
           <MultipleSelectToken
-            selectedTokens={selectedTokens}
-            setSelectedTokens={setSelectedTokens}
+            selectedChains={selectedChains}
+            setSelectedChains={setSelectedChains}
           />
           <FormControl variant="outlined">
             <OutlinedInput
@@ -142,7 +148,7 @@ const CreateCampaignForm = ({
           <FormControl variant="outlined">
             <OutlinedInput
               id="goalCC"
-              placeholder="Goal"
+              placeholder="Goal (optional)"
               inputProps={{ min: 1, step: 1 }}
               endAdornment={<InputAdornment position="end">☕</InputAdornment>}
               value={goalCC}

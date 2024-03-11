@@ -1,10 +1,9 @@
-import { sql } from "@vercel/postgres";
-import { PostCampaign } from "../../../types/campaign";
+import { BaseCampaign } from "../../../types/campaign";
 import { getCampaignCreator } from "./getCampaignCreator";
 import { NewUser, User } from "../../../types/user";
 import { db } from "@/lib/kysely";
 
-export async function postCampaign(campaign: PostCampaign): Promise<{
+export async function postCampaign(campaign: BaseCampaign): Promise<{
   campaign_id: number;
   creator: NewUser | User;
 }> {
@@ -52,17 +51,17 @@ export async function postCampaign(campaign: PostCampaign): Promise<{
 
   const campaign_id = returnedCampaign.campaign_id;
 
-  // Insert allowed tokens for the campaign
-  const values: string[] = [];
-  campaign.allowedTokens.forEach((tokenKey) => {
-    values.push(`(${campaign_id}, '${tokenKey}')`);
-  });
+  const allowedChainsValues = campaign.allowedChainIds.map((chain_id) => ({
+    campaign_id,
+    chain_id,
+  }));
 
-  let query = `INSERT INTO campaign_allowed_tokens (campaign_id, token_key) VALUES ${values.join(
-    ", "
-  )}`;
+  // Insert allowed chains
 
-  await sql.query(query);
+  await db
+    .insertInto("campaign_allowed_chains")
+    .values(allowedChainsValues)
+    .execute();
 
   if (!existingUser) {
     return { campaign_id, creator: { user_id, address: campaign.owner } };

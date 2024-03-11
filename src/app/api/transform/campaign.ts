@@ -1,26 +1,21 @@
 import { tokenList } from "@/constants/tokenList";
 import { StoredCampaign } from "@/types/campaign";
-import { CampaignAllowedTokensRow, CampaignsTableReturnType } from "@/types/db";
+import {
+  CampaignsTableReturnType,
+  StoredCampaignAllowedChains,
+} from "@/types/db";
 import { Token } from "@/types/ethereum";
 import { Address } from "viem";
 
 export const transformCampaigns = ({
   campaigns,
-  allowedTokens,
+  allowedChains,
   ownerAddress,
 }: {
   campaigns: CampaignsTableReturnType[];
-  allowedTokens: CampaignAllowedTokensRow[];
+  allowedChains: StoredCampaignAllowedChains[];
   ownerAddress: string;
 }): StoredCampaign[] => {
-  const parsedAllowedTokens = allowedTokens.reduce<Token[]>((acc, tokenKey) => {
-    const [chainId, tokenAddress] = tokenKey.token_key.split("-");
-    const token = tokenList[+chainId][tokenAddress as Address];
-
-    acc.push(token);
-    return acc;
-  }, []);
-
   const parsedCampaign: StoredCampaign[] = campaigns.map(
     ({
       campaign_id,
@@ -33,20 +28,29 @@ export const transformCampaigns = ({
       cafe_crypto_unit,
       user_id,
       description,
-    }) => ({
-      campaignId: campaign_id,
-      createdAt: created_at,
-      isOpen: is_open,
-      name,
-      totalReceived: total_received,
-      endDate: end_date,
-      cafeCryptoUnit: cafe_crypto_unit,
-      goalCC: goal_cc,
-      allowedTokens: parsedAllowedTokens,
-      owner: ownerAddress as Address,
-      userId: user_id,
-      description,
-    })
+    }) => {
+      const allowedChainIds = allowedChains
+        .filter(
+          ({ campaign_id: stored_campaign_id }) =>
+            stored_campaign_id === campaign_id
+        )
+        .map((chain) => chain.chain_id);
+
+      return {
+        campaignId: campaign_id,
+        createdAt: created_at,
+        isOpen: is_open,
+        name,
+        totalReceived: total_received,
+        endDate: end_date,
+        cafeCryptoUnit: cafe_crypto_unit,
+        goalCC: goal_cc,
+        allowedChainIds,
+        owner: ownerAddress as Address,
+        userId: user_id,
+        description,
+      };
+    }
   );
 
   return parsedCampaign;
