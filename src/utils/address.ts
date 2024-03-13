@@ -12,7 +12,3 @@ export const trimAddress = ({
 
   return `${trimStart}${".".repeat(3)}${trimEnd}`;
 };
-
-export const generateMessage = (timestamp?: number) => {
-  return `Please sign this message to verify ownership.`;
-};

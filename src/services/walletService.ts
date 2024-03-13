@@ -7,6 +7,9 @@ import {
 import ProviderService from "./providerService";
 import ContractService from "./contractService";
 import { UseWalletClientReturnType } from "wagmi";
+import { getWalletClient } from "wagmi/actions";
+import { config } from "@/ethereum/wagmi/config";
+import { DateTime } from "luxon";
 
 export default class WalletService {
   providerService: ProviderService;
@@ -112,5 +115,15 @@ export default class WalletService {
     return {
       hash,
     };
+  }
+
+  async getWalletVerifyingSignature() {
+    const walletClient = await getWalletClient(config);
+    const message = `CafeCrypto wants you to sign in with you Ethereum account:\r\n${
+      walletClient.account.address
+    }.\r\n\r\nIssued at: ${DateTime.now()}`;
+    const signature = await walletClient.signMessage({ message });
+
+    return { signature, message };
   }
 }

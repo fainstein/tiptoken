@@ -29,4 +29,5 @@ export type StoredCampaign = OpenCampaign | CompleteCampaign;
 
 export interface NewCampaign extends BaseCampaign {
   signature: Address;
+  message: string;
 }
