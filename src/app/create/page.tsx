@@ -2,8 +2,7 @@ import { Box, Typography } from "@mui/material";
 import CreateCampaignForm from "./create-campaign-form";
 import { NewCampaign } from "../../types/campaign";
 import { postCampaign } from "../api/campaign/postCampaign";
-import { recoverMessageAddress, verifyMessage } from "viem";
-import { generateMessage } from "../../utils/address";
+import { Address, verifyMessage } from "viem";
 
 async function handlePostCampaign({
   signature,
@@ -14,13 +13,9 @@ async function handlePostCampaign({
   goalCC,
   owner,
   description,
+  message,
 }: NewCampaign) {
   "use server";
-  const message = generateMessage();
-  const recoveredAddress = await recoverMessageAddress({
-    signature,
-    message,
-  });
 
   const verification = await verifyMessage({
     address: owner,
@@ -39,7 +34,7 @@ async function handlePostCampaign({
       endDate,
       cafeCryptoUnit,
       goalCC,
-      owner: recoveredAddress.toLowerCase() as typeof recoveredAddress,
+      owner: owner.toLowerCase() as Address,
       description,
     });
 

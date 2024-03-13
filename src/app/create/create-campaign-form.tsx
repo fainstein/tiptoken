@@ -13,14 +13,13 @@ import {
 } from "@mui/material";
 import MultipleSelectToken from "./multiple-select-token";
 import { NewCampaign } from "../../types/campaign";
-import { useAccount, useSignMessage } from "wagmi";
-import { Token } from "../../types/ethereum";
-import { generateMessage } from "../../utils/address";
+import { useAccount } from "wagmi";
 import { CheckCircleOutline } from "@mui/icons-material";
 import { ContainerBox } from "../../ui/components/container-box";
 import { NewUser, User } from "../../types/user";
 import Link from "next/link";
 import { networkList } from "@/constants/networks";
+import useWalletService from "@/hooks/services/useWalletService";
 
 interface CreateCampaignFormProps {
   handlePostCampaign: (
@@ -41,19 +40,16 @@ const CreateCampaignForm = ({
   const [success, setSuccess] = React.useState("");
   const [user, setUser] = React.useState<{ id?: number; isNew?: boolean }>();
   const [description, setDescription] = React.useState("");
-  const { signMessageAsync } = useSignMessage();
   const { address: owner } = useAccount();
+  const walletService = useWalletService();
 
   const handleCreateCampaign = async () => {
     if (!name || selectedChains.length === 0 || !owner || !+CCValue) {
       return;
     }
 
-    const message = generateMessage();
-    const signMessageData = await signMessageAsync({
-      message,
-      account: owner,
-    });
+    const { signature, message } =
+      await walletService.getWalletVerifyingSignature();
     setIsLoading(true);
 
     const allowedChainIds = selectedChains.map((chainId) => Number(chainId));
@@ -61,12 +57,13 @@ const CreateCampaignForm = ({
     const campaignData = await handlePostCampaign({
       name,
       allowedChainIds,
-      signature: signMessageData,
+      signature,
       cafeCryptoUnit: +CCValue,
       goalCC: +goalCC > 0 ? +goalCC : null,
       owner,
       description,
       endDate: null,
+      message,
     });
     setSuccess(campaignData?.campaignId ?? "");
     setUser({
