@@ -15,6 +15,7 @@ const updateUserAction = async (user: UpdateUser) => {
     await updateUser(user);
   } catch (e) {
     console.error(e);
+    throw new Error("Uh oh! We couldn't update your user information. Please try again")
   }
 };
 

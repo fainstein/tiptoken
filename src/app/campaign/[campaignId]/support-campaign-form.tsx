@@ -37,7 +37,7 @@ interface SupportCampaignFormProps {
   }: {
     networkName: string;
     tokens: TokenAddress[];
-  }) => Promise<TokenPrices>;
+  }) => Promise<TokenPrices | undefined>;
   handlePostCampaignTransaction: (
     campaignTransactionData: PostcampaignTransaction
   ) => Promise<void>;
@@ -160,12 +160,10 @@ const SupportCampaignForm = ({
       });
     } catch (e) {
       console.error(e);
-      if (e instanceof Error) {
-        snackbar.enqueueSnackbar({
-          variant: "error",
-          message: e.message,
-        });
-      }
+      snackbar.enqueueSnackbar({
+        variant: "error",
+        message: (e as Error).message,
+      });
     } finally {
       setIsLoading(false);
     }
