@@ -2,6 +2,7 @@ import { BaseCampaign } from "../../../types/campaign";
 import { getCampaignCreator } from "./getCampaignCreator";
 import { NewUser, User } from "../../../types/user";
 import { db } from "@/lib/kysely";
+import { revalidatePath } from "next/cache";
 
 export async function postCampaign(campaign: BaseCampaign): Promise<{
   campaign_id: number;
@@ -62,6 +63,8 @@ export async function postCampaign(campaign: BaseCampaign): Promise<{
     .insertInto("campaign_allowed_chains")
     .values(allowedChainsValues)
     .execute();
+
+  revalidatePath("/");
 
   if (!existingUser) {
     return { campaign_id, creator: { user_id, address: campaign.owner } };
