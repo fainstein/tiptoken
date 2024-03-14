@@ -26,6 +26,12 @@ export async function postCampaignTransaction({
     })
     .execute();
 
-  revalidatePath("/");
-  revalidatePath(`/campaign/${campaignId}`);
+  await db
+    .updateTable("campaigns")
+    .set((eb) => ({ total_received: eb("total_received", "+", ccAmount) }))
+    .where("campaign_id", "=", campaignId)
+    .execute();
+
+  // This was causing a rare error in the browser console
+  // revalidatePath("/", "layout");
 }
