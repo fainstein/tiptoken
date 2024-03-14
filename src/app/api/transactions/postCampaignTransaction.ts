@@ -1,5 +1,6 @@
 import { db } from "@/lib/kysely";
 import { PostcampaignTransaction } from "@/types/transactions";
+import { revalidatePath } from "next/cache";
 
 export async function postCampaignTransaction({
   campaignId,
@@ -24,4 +25,7 @@ export async function postCampaignTransaction({
       sender_message: senderMessage,
     })
     .execute();
+
+  revalidatePath("/");
+  revalidatePath(`/campaign/${campaignId}`);
 }
