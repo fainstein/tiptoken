@@ -20,6 +20,7 @@ import { NewUser, User } from "../../types/user";
 import Link from "next/link";
 import { networkList } from "@/constants/networks";
 import useWalletService from "@/hooks/services/useWalletService";
+import { useSnackbar } from "notistack";
 
 interface CreateCampaignFormProps {
   handlePostCampaign: (
@@ -42,35 +43,46 @@ const CreateCampaignForm = ({
   const [description, setDescription] = React.useState("");
   const { address: owner } = useAccount();
   const walletService = useWalletService();
+  const snackbar = useSnackbar();
 
   const handleCreateCampaign = async () => {
     if (!name || selectedChains.length === 0 || !owner || !+CCValue) {
       return;
     }
 
-    const { signature, message } =
-      await walletService.getWalletVerifyingSignature();
-    setIsLoading(true);
-
     const allowedChainIds = selectedChains.map((chainId) => Number(chainId));
 
-    const campaignData = await handlePostCampaign({
-      name,
-      allowedChainIds,
-      signature,
-      cafeCryptoUnit: +CCValue,
-      goalCC: +goalCC > 0 ? +goalCC : null,
-      owner,
-      description,
-      endDate: null,
-      message,
-    });
-    setSuccess(campaignData?.campaignId ?? "");
-    setUser({
-      isNew: !(campaignData && "name" in campaignData.creator),
-      id: campaignData?.creator.user_id,
-    });
-    setIsLoading(false);
+    try {
+      const { signature, message } =
+        await walletService.getWalletVerifyingSignature();
+      setIsLoading(true);
+
+      const campaignData = await handlePostCampaign({
+        name,
+        allowedChainIds,
+        signature,
+        cafeCryptoUnit: +CCValue,
+        goalCC: +goalCC > 0 ? +goalCC : null,
+        owner,
+        description,
+        endDate: null,
+        message,
+      });
+
+      setSuccess(campaignData?.campaignId ?? "");
+
+      setUser({
+        isNew: !(campaignData && "name" in campaignData.creator),
+        id: campaignData?.creator.user_id,
+      });
+    } catch (e) {
+      snackbar.enqueueSnackbar({
+        variant: "error",
+        message: (e as Error).message,
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleCcValueChange = (newValue: string) => {

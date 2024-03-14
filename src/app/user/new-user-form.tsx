@@ -9,6 +9,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { useSnackbar } from "notistack";
 
 interface NewUserFormProps {
   userId: number;
@@ -19,6 +20,7 @@ const NewUserForm = ({ userId, updateUser }: NewUserFormProps) => {
   const [name, setName] = React.useState("");
   const [isLoading, setIsLoading] = React.useState(false);
   const [success, setSuccess] = React.useState(false);
+  const snackbar = useSnackbar();
 
   if (success) {
     return;
@@ -30,7 +32,15 @@ const NewUserForm = ({ userId, updateUser }: NewUserFormProps) => {
     }
 
     setIsLoading(true);
-    await updateUser({ user_id: userId, name });
+    try {
+      await updateUser({ user_id: userId, name });
+    } catch (e) {
+      console.error(e);
+      snackbar.enqueueSnackbar({
+        variant: "error",
+        message: (e as Error).message,
+      });
+    }
     setSuccess(true);
     setIsLoading(false);
   };

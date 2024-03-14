@@ -68,8 +68,13 @@ export default class WalletService {
         chain: null,
       };
     }
-    const preparedTx = await signer.data?.prepareTransactionRequest(txData);
-    return preparedTx;
+    try {
+      const preparedTx = await signer.data?.prepareTransactionRequest(txData);
+
+      return preparedTx;
+    } catch (e) {
+      throw new Error("There was an error getting the transaction data");
+    }
   }
 
   async transferToken({
@@ -99,7 +104,7 @@ export default class WalletService {
     });
 
     if (!txToSend) {
-      return;
+      throw new Error("There was an issue while creating your transaction");
     }
 
     const hash = await signer.data?.sendTransaction({
@@ -109,7 +114,7 @@ export default class WalletService {
     });
 
     if (!hash) {
-      return;
+      throw new Error("There was an issue while creating your transaction");
     }
 
     return {
@@ -122,8 +127,15 @@ export default class WalletService {
     const message = `CafeCrypto wants you to sign in with you Ethereum account:\r\n${
       walletClient.account.address
     }.\r\n\r\nIssued at: ${DateTime.now()}`;
-    const signature = await walletClient.signMessage({ message });
 
-    return { signature, message };
+    try {
+      const signature = await walletClient.signMessage({ message });
+      return { signature, message };
+    } catch (e) {
+      console.error(e);
+      throw new Error(
+        "There was an error getting your signature. Please try again"
+      );
+    }
   }
 }

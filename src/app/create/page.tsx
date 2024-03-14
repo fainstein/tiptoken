@@ -24,7 +24,9 @@ async function handlePostCampaign({
   });
 
   if (!verification) {
-    throw new Error("Message signed with another address");
+    throw new Error(
+      "Uh oh! Your signature doesn't match with your wallet. Please try again"
+    );
   }
 
   try {
@@ -41,6 +43,9 @@ async function handlePostCampaign({
     return { campaignId: campaign_id.toString(), creator };
   } catch (e) {
     console.error(e);
+    throw new Error(
+      "We were not able to create your campaign. Please try again"
+    );
   }
 }
 

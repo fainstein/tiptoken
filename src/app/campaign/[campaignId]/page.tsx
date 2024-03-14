@@ -17,7 +17,11 @@ const handleGetTokensPrices = async ({
   tokens: TokenAddress[];
 }) => {
   "use server";
-  return await getTokenPrices({ networkName, tokens });
+  try {
+    return await getTokenPrices({ networkName, tokens });
+  } catch (e) {
+    console.error(e);
+  }
 };
 
 const handlePostCampaignTransaction = async (
