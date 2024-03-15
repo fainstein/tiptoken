@@ -19,7 +19,12 @@ import { Network, Token, TokenAddress, TokenPrices } from "@/types/ethereum";
 import TokenSelector from "@/components/token-selector/token-selector";
 import Image from "next/image";
 import CafeCrypto from "@/../public/CafeCrypto.png";
-import { useAccount, useWalletClient } from "wagmi";
+import {
+  useAccount,
+  useClient,
+  useConnectorClient,
+  useWalletClient,
+} from "wagmi";
 import useTokenBalance from "@/hooks/useTokenBalance";
 import { useSnackbar } from "notistack";
 import usewalletService from "@/hooks/services/useWalletService";
@@ -81,7 +86,7 @@ const SupportCampaignForm = ({
     };
     void getData();
   }, [network, handleGetTokensPrices]);
-  const { balance, isLoadingBalance } = useTokenBalance({
+  const { balance = 0n, isLoadingBalance } = useTokenBalance({
     token,
     walletAddress: account.address,
   });
@@ -117,6 +122,33 @@ const SupportCampaignForm = ({
       setCcAmount(parsedAmount);
     }
   };
+  console.log("account", account);
+  const btnState = React.useMemo<{
+    disabled: boolean;
+    title: string;
+    onClick?: () => Promise<void>;
+  }>(() => {
+    const parsedAmount = parseUnits(
+      tokenValue?.toString() || "0",
+      token.decimals
+    );
+
+    if (!account.address) {
+      return { disabled: true, title: "Connect wallet" };
+    } else if (parsedAmount > balance) {
+      return { disabled: true, title: "Not enough balance" };
+    } else if (walletClient.data?.chain.id !== network.chainId) {
+      return {
+        disabled: false,
+        title: `Switch network to ${network.name}`,
+        onClick: () => walletService.attemptToChangeNetwork(network.chainId),
+      };
+    } else if (!parsedAmount) {
+      return { disabled: true, title: "Send" };
+    }
+
+    return { disabled: false, title: "Send" };
+  }, [account, walletClient, balance, network, token, tokenValue, walletService]);
 
   const handleSupportCampaign = async () => {
     setIsLoading(true);
@@ -125,7 +157,7 @@ const SupportCampaignForm = ({
       token.decimals
     );
 
-    if (!account.address || !balance || parsedAmount > balance) {
+    if (!account.address || parsedAmount > balance) {
       return;
     }
     try {
@@ -230,10 +262,10 @@ const SupportCampaignForm = ({
       <Button
         variant="contained"
         size="large"
-        onClick={handleSupportCampaign}
-        disabled={isLoading}
+        onClick={btnState.onClick ?? handleSupportCampaign}
+        disabled={isLoading || btnState.disabled}
       >
-        {isLoading ? <CircularProgress /> : "Send"}
+        {isLoading ? <CircularProgress /> : btnState.title}
       </Button>
     </Box>
   );

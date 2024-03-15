@@ -45,6 +45,18 @@ const CreateCampaignForm = ({
   const walletService = useWalletService();
   const snackbar = useSnackbar();
 
+  const btnState = React.useMemo<{ disabled: boolean; title: string }>(() => {
+    if (!owner) {
+      return { disabled: true, title: "Connect wallet" };
+    } else if (selectedChains.length === 0) {
+      return { disabled: true, title: "You must select at least one networkß" };
+    } else if (!name || !+CCValue) {
+      return { disabled: true, title: "Sign & Create" };
+    }
+
+    return { disabled: false, title: "Sign & Create" };
+  }, [owner, selectedChains, name, CCValue]);
+
   const handleCreateCampaign = async () => {
     if (!name || selectedChains.length === 0 || !owner || !+CCValue) {
       return;
@@ -181,9 +193,9 @@ const CreateCampaignForm = ({
             variant="contained"
             size="large"
             onClick={handleCreateCampaign}
-            disabled={isLoading}
+            disabled={isLoading || btnState.disabled}
           >
-            {isLoading ? <CircularProgress /> : "Create"}
+            {isLoading ? <CircularProgress /> : btnState.title}
           </Button>
         </Box>
       )}
