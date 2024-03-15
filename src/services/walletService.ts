@@ -6,8 +6,8 @@ import {
 } from "viem";
 import ProviderService from "./providerService";
 import ContractService from "./contractService";
-import { UseWalletClientReturnType } from "wagmi";
-import { getWalletClient } from "wagmi/actions";
+import { Connector, UseWalletClientReturnType } from "wagmi";
+import { getConnections, getWalletClient, switchChain } from "wagmi/actions";
 import { config } from "@/ethereum/wagmi/config";
 import { DateTime } from "luxon";
 
@@ -137,5 +137,13 @@ export default class WalletService {
         "There was an error getting your signature. Please try again"
       );
     }
+  }
+
+  async attemptToChangeNetwork(chainId: number) {
+    const connections = getConnections(config);
+    await switchChain(config, {
+      chainId: chainId as any,
+      connector: connections[0]?.connector,
+    });
   }
 }

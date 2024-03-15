@@ -64,7 +64,7 @@ const NewUserForm = ({ userId, updateUser }: NewUserFormProps) => {
         variant="contained"
         size="large"
         onClick={handleUpdateUser}
-        disabled={isLoading}
+        disabled={isLoading || !name}
       >
         {isLoading ? <CircularProgress /> : "Update your information"}
       </Button>
