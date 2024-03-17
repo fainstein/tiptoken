@@ -1,6 +1,6 @@
 import { getCampaign } from "@/app/api/campaign/getCampaigns";
 import SupportCampaignForm from "./support-campaign-form";
-import { Box, Typography } from "@mui/material";
+import { Box, CircularProgress, Grid, Typography } from "@mui/material";
 import { NetworkList, TokenAddress } from "@/types/ethereum";
 import { getTokenPrices } from "@/app/api/defillama/getTokenPrices";
 import { networkList } from "@/constants/networks";
@@ -8,6 +8,8 @@ import { redirect } from "next/navigation";
 import { postCampaignTransaction } from "@/app/api/transactions/postCampaignTransaction";
 import { PostcampaignTransaction } from "@/types/transactions";
 import { tokenList } from "@/constants/tokenList";
+import TransactionsList from "./transactions-list";
+import { Suspense } from "react";
 
 const handleGetTokensPrices = async ({
   networkName,
@@ -52,14 +54,26 @@ export default async function Campaign({
   return (
     <Box display="flex" gap={12} flexDirection="column">
       <Typography variant="h3">Support this campaign</Typography>
-      <SupportCampaignForm
-        campaign={campaign}
-        handleGetTokensPrices={handleGetTokensPrices}
-        handlePostCampaignTransaction={handlePostCampaignTransaction}
-        allowedNetworks={allowedNetworks}
-        defaultNetwork={defaultNetwork}
-        defaultToken={defaultToken}
-      />
+      <Grid container columnSpacing={10}>
+        <Grid item xs={12} sm={5}>
+          <Suspense fallback={<CircularProgress />}>
+            <TransactionsList
+              campaignId={campaign.campaignId}
+              ccUnit={campaign.cafeCryptoUnit}
+            />
+          </Suspense>
+        </Grid>
+        <Grid item xs={12} sm={7}>
+          <SupportCampaignForm
+            campaign={campaign}
+            handleGetTokensPrices={handleGetTokensPrices}
+            handlePostCampaignTransaction={handlePostCampaignTransaction}
+            allowedNetworks={allowedNetworks}
+            defaultNetwork={defaultNetwork}
+            defaultToken={defaultToken}
+          />
+        </Grid>
+      </Grid>
     </Box>
   );
 }
