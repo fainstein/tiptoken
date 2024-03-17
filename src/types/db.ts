@@ -1,4 +1,6 @@
 import { Generated } from "kysely";
+import { Address } from "viem";
+import { TokenAddress } from "./ethereum";
 
 export interface CampaignsTable {
   campaign_id: Generated<number>;
@@ -33,7 +35,7 @@ export interface StoredCampaignAllowedChains
 
 export interface UsersTable {
   user_id: Generated<number>;
-  address: string;
+  address: Address;
   name: string | null;
 }
 
@@ -58,12 +60,18 @@ export interface SocialMediaLinksRow {
 export interface CampaignTransactionsTable {
   transaction_id: Generated<number>;
   hash: string;
-  sender_address: string;
+  sender_address: Address;
   campaign_id: number;
   created_at: Generated<Date>;
   chain_id: number;
-  token_address: string;
+  token_address: TokenAddress;
   token_amount: bigint;
   cc_amount: number;
   sender_message: string;
+}
+
+export interface StoredCamapignTransaction
+  extends Omit<CampaignTransactionsTable, "transaction_id" | "created_at"> {
+  transaction_id: number;
+  create_at: Date;
 }

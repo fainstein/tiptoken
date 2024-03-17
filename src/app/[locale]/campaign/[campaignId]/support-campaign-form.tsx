@@ -122,7 +122,7 @@ const SupportCampaignForm = ({
       setCcAmount(parsedAmount);
     }
   };
-  console.log("account", account);
+
   const btnState = React.useMemo<{
     disabled: boolean;
     title: string;
@@ -148,7 +148,15 @@ const SupportCampaignForm = ({
     }
 
     return { disabled: false, title: "Send" };
-  }, [account, walletClient, balance, network, token, tokenValue, walletService]);
+  }, [
+    account,
+    walletClient,
+    balance,
+    network,
+    token,
+    tokenValue,
+    walletService,
+  ]);
 
   const handleSupportCampaign = async () => {
     setIsLoading(true);
