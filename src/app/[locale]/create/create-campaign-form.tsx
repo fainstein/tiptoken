@@ -12,11 +12,11 @@ import {
   TextField,
 } from "@mui/material";
 import MultipleSelectToken from "./multiple-select-token";
-import { NewCampaign } from "../../types/campaign";
+import { NewCampaign } from "../../../types/campaign";
 import { useAccount } from "wagmi";
 import { CheckCircleOutline } from "@mui/icons-material";
-import { ContainerBox } from "../../ui/components/container-box";
-import { NewUser, User } from "../../types/user";
+import { ContainerBox } from "../../../ui/components/container-box";
+import { NewUser, User } from "../../../types/user";
 import Link from "next/link";
 import { networkList } from "@/constants/networks";
 import useWalletService from "@/hooks/services/useWalletService";

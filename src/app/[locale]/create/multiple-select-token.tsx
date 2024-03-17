@@ -9,8 +9,8 @@ import {
   Select,
   SelectChangeEvent,
 } from "@mui/material";
-import { tokenList } from "../../constants/tokenList";
-import { networkList } from "../../constants/networks";
+import { tokenList } from "../../../constants/tokenList";
+import { networkList } from "../../../constants/networks";
 
 interface MultipleSelectTokenProps {
   selectedChains: string[];
