@@ -10,11 +10,14 @@ import theme from "../ui/theme";
 import WalletContext from "@/context/wallet-context";
 import Web3Service from "@/services/web3Service";
 import { SnackbarProvider } from "notistack";
+import { I18nProviderClient } from "@/locales/client";
 
 const Providers = ({
+  locale,
   children,
   initialState,
 }: Readonly<{
+  locale: string;
   children: React.ReactNode;
   initialState?: State;
 }>) => {
@@ -27,7 +30,11 @@ const Providers = ({
         <QueryClientProvider client={queryClient}>
           <ThemeProvider theme={theme}>
             <LocalizationProvider dateAdapter={AdapterLuxon}>
-              <SnackbarProvider>{children}</SnackbarProvider>
+              <SnackbarProvider>
+                <I18nProviderClient locale={locale}>
+                  {children}
+                </I18nProviderClient>
+              </SnackbarProvider>
             </LocalizationProvider>
           </ThemeProvider>
         </QueryClientProvider>

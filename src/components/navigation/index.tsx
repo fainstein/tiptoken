@@ -6,8 +6,11 @@ import NextLink from "next/link";
 import { ContainerBox } from "@/ui/components/container-box";
 import Image from "next/image";
 import CafeCrypto from "../../../public/CafeCrypto.png";
+import LocaleSwitch from "./locale-switcher";
+import { useI18n } from "@/locales/client";
 
 const Navigation = () => {
+  const t = useI18n();
   return (
     <Box
       component="nav"
@@ -29,9 +32,10 @@ const Navigation = () => {
       </Link>
       <ContainerBox alignItems="center" gap={3}>
         <Button variant="contained" href="/create" LinkComponent={NextLink}>
-          Create
+          {t("create")}
         </Button>
         <ConnectWalletButton />
+        <LocaleSwitch />
       </ContainerBox>
     </Box>
   );

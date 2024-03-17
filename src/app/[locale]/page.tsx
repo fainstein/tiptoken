@@ -1,14 +1,15 @@
 import { Box, Grid, Typography } from "@mui/material";
-import { getOpenCampaigns } from "./api/campaign/getCampaigns";
-import CampaignCard from "./home/campaign-card";
+import { getOpenCampaigns } from "../api/campaign/getCampaigns";
+import CampaignCard from "../../components/home/campaign-card";
+import { getI18n } from "@/locales/server";
 
 export default async function Home() {
   const campaigns = await getOpenCampaigns();
-
+  const t = await getI18n();
   return (
     <Box display="flex" flexDirection="column" gap={8}>
       <Typography variant="h2" textAlign="left">
-        Open campaigns
+        {t("open.cafecryptos")}
       </Typography>
       <Box display="flex" flexDirection="column" gap={2}>
         {campaigns.map((campaign) => (
