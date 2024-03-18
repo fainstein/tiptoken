@@ -19,18 +19,14 @@ import { Network, Token, TokenAddress, TokenPrices } from "@/types/ethereum";
 import TokenSelector from "@/components/token-selector/token-selector";
 import Image from "next/image";
 import CafeCrypto from "@/../public/CafeCrypto.png";
-import {
-  useAccount,
-  useClient,
-  useConnectorClient,
-  useWalletClient,
-} from "wagmi";
+import { useAccount, useWalletClient } from "wagmi";
 import useTokenBalance from "@/hooks/useTokenBalance";
 import { useSnackbar } from "notistack";
 import usewalletService from "@/hooks/services/useWalletService";
 import { parseUnits } from "viem";
 import { PostcampaignTransaction } from "@/types/transactions";
 import { tokenList } from "@/constants/tokenList";
+import { useRouter } from "next/navigation";
 
 const amountRegex = RegExp(/^[1-9]\d*$/);
 
@@ -70,6 +66,7 @@ const SupportCampaignForm = ({
   const walletClient = useWalletClient();
   const walletService = usewalletService();
   const snackbar = useSnackbar();
+  const router = useRouter();
 
   React.useEffect(() => {
     const tokenAddresses = Object.values(tokenList[network.chainId]).map(
@@ -192,12 +189,13 @@ const SupportCampaignForm = ({
         senderMessage: message,
       };
 
-      void handlePostCampaignTransaction(parsedTransactionDbData);
-
       snackbar.enqueueSnackbar({
         variant: "success",
         message: "Transaction submited",
       });
+
+      await handlePostCampaignTransaction(parsedTransactionDbData);
+      router.refresh();
     } catch (e) {
       console.error(e);
       snackbar.enqueueSnackbar({

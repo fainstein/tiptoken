@@ -6,6 +6,7 @@ import {
   Box,
   Paper,
   Table,
+  TableBody,
   TableCell,
   TableContainer,
   TableHead,
@@ -44,40 +45,46 @@ const TransactionsList = async ({
           <TableContainer component={Paper}>
             <Table>
               <TableHead>
-                <TableCell>{t("tx.from")}</TableCell>
-                <TableCell sx={{ textAlign: "center" }}>
-                  <Image
-                    alt="cafe-crypto-unit"
-                    src={CafeCrypto}
-                    width={24}
-                    height={24}
-                  />
-                </TableCell>
-                <TableCell sx={{ textAlign: "center" }}>USD</TableCell>
-                <TableCell></TableCell>
-              </TableHead>
-              {transactions.map((tx) => (
-                <TableRow key={tx.hash}>
-                  <TableCell>
-                    <Typography variant="body1">
-                      {trimAddress({ address: tx.sender_address })}
-                    </Typography>
-                  </TableCell>
+                <TableRow>
+                  <TableCell>{t("tx.from")}</TableCell>
                   <TableCell sx={{ textAlign: "center" }}>
-                    <Typography variant="body1">{tx.cc_amount}</Typography>
+                    <Image
+                      alt="cafe-crypto-unit"
+                      src={CafeCrypto}
+                      width={24}
+                      height={24}
+                    />
                   </TableCell>
-                  <TableCell sx={{ textAlign: "center" }}>
-                    <Typography variant="body1">
-                      ${tx.cc_amount * ccUnit}
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography variant="body1">
-                      {DateTime.fromJSDate(tx.created_at).toRelative()}
-                    </Typography>
-                  </TableCell>
+                  <TableCell sx={{ textAlign: "center" }}>USD</TableCell>
+                  <TableCell></TableCell>
                 </TableRow>
-              ))}
+              </TableHead>
+              <TableBody>
+                {transactions.map((tx) => (
+                  <TableRow key={tx.hash}>
+                    <TableCell>
+                      <Typography variant="body1">
+                        {trimAddress({ address: tx.sender_address })}
+                      </Typography>
+                    </TableCell>
+                    <TableCell sx={{ textAlign: "center" }}>
+                      <Typography variant="body1">{tx.cc_amount}</Typography>
+                    </TableCell>
+                    <TableCell sx={{ textAlign: "center" }}>
+                      <Typography variant="body1">
+                        ${tx.cc_amount * ccUnit}
+                      </Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="body1">
+                        {DateTime.fromJSDate(tx.created_at)
+                          .minus({ hours: 3 })
+                          .toRelative()}
+                      </Typography>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
             </Table>
           </TableContainer>
         </>
