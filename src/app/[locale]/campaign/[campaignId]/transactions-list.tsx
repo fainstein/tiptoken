@@ -77,9 +77,7 @@ const TransactionsList = async ({
                     </TableCell>
                     <TableCell>
                       <Typography variant="body1">
-                        {DateTime.fromJSDate(tx.created_at)
-                          .minus({ hours: 3 })
-                          .toRelative()}
+                        {DateTime.fromJSDate(tx.created_at).toRelative()}
                       </Typography>
                     </TableCell>
                   </TableRow>
