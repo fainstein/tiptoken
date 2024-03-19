@@ -1,10 +1,8 @@
-import { tokenList } from "@/constants/tokenList";
 import { StoredCampaign } from "@/types/campaign";
 import {
   CampaignsTableReturnType,
   StoredCampaignAllowedChains,
 } from "@/types/db";
-import { Token } from "@/types/ethereum";
 import { Address } from "viem";
 
 export const transformCampaigns = ({

@@ -25,6 +25,10 @@ export interface CompleteCampaign extends BaseCampaign {
   userId: number;
 }
 
+export interface CampaignWithOwner extends OpenCampaign {
+  user_name: string | null;
+}
+
 export type StoredCampaign = OpenCampaign | CompleteCampaign;
 
 export interface NewCampaign extends BaseCampaign {

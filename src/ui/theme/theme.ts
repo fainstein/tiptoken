@@ -1,19 +1,20 @@
 "use client";
 import { createTheme } from "@mui/material/styles";
+import { palette } from "./components/palette";
 
-import { Roboto } from "next/font/google";
-import { components } from "./components";
+import { Poppins } from "next/font/google";
+import { components } from "./components/components";
 
-const roboto = Roboto({
+const poppins = Poppins({
   weight: ["300", "400", "500", "700"],
   subsets: ["latin"],
-  display: "swap",
 });
 
 const theme = createTheme({
   typography: {
-    fontFamily: roboto.style.fontFamily,
+    fontFamily: poppins.style.fontFamily,
   },
+  palette,
   spacing: 4,
   components: components,
 });

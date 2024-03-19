@@ -1,15 +1,8 @@
-import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
+import StyledComponentsRegistry from "@/lib/registry";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-// import Providers from "../providers";
-import { Grid } from "@mui/material";
-import Footer from "@/components/footer";
-import Navigation from "@/components/navigation";
-import { cookieToInitialState } from "wagmi";
-import { config } from "@/ethereum/wagmi/config";
-import { headers } from "next/headers";
+import { Poppins } from "next/font/google";
 
-const inter = Inter({ subsets: ["latin"] });
+const poppins = Poppins({ subsets: ["latin"], weight: ["400", "700", "800"] });
 
 export const metadata: Metadata = {
   title: "CafeCrypto",
@@ -21,11 +14,10 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // const initialState = cookieToInitialState(config, headers().get("cookie"));
   return (
     <html lang="en">
-      <body className={inter.className} style={{ margin: 0 }}>
-        {children}
+      <body className={poppins.className} style={{ margin: 0 }}>
+        <StyledComponentsRegistry>{children}</StyledComponentsRegistry>
       </body>
     </html>
   );

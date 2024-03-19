@@ -6,7 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider } from "@mui/material/styles";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
-import theme from "../ui/theme";
+import theme from "../ui/theme/theme";
 import WalletContext from "@/context/wallet-context";
 import Web3Service from "@/services/web3Service";
 import { SnackbarProvider } from "notistack";

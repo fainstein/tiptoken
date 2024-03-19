@@ -1,6 +1,4 @@
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v13-appRouter";
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import Providers from "../providers";
 import { Grid } from "@mui/material";
 import Footer from "@/components/footer";
@@ -24,8 +22,6 @@ export default function RootLayout({
         <Grid
           component="main"
           container
-          justifyContent="center"
-          alignItems="center"
           minHeight="calc(100vh - 130px)"
           px={{ xs: 5, md: 10 }}
         >
