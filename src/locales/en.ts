@@ -8,4 +8,8 @@ export default {
   "campaign.card.received": "Received",
   "campaign.card.value": "{img} value",
   "campaign.card.createdby": "Created by",
+  "navigation.connect": "Connect",
+  "navigation.disconnect": "Disconnect",
+  "navigation.create": "Create",
+  "navigation.profile": "Profile",
 } as const;

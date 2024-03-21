@@ -3,7 +3,11 @@ import { locales } from "@/middleware";
 import { useChangeLocale, useCurrentLocale } from "@/locales/client";
 import { MenuItem, Select } from "@mui/material";
 
-const LocaleSwitch = () => {
+interface LocaleSwitcherProps {
+  onClose?: () => void;
+}
+
+const LocaleSwitch = ({}: LocaleSwitcherProps) => {
   const locale = useCurrentLocale();
   const changeLocale = useChangeLocale();
 

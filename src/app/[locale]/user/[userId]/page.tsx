@@ -15,11 +15,16 @@ const updateUserAction = async (user: UpdateUser) => {
     await updateUser(user);
   } catch (e) {
     console.error(e);
-    throw new Error("Uh oh! We couldn't update your user information. Please try again")
+    throw new Error(
+      "Uh oh! We couldn't update your user information. Please try again"
+    );
   }
 };
 
 export default async function User({ params }: { params: { userId: string } }) {
+  if (isNaN(Number(params.userId))) {
+    redirect("/");
+  }
   const user = await getUser(Number(params.userId));
 
   if (!user.user_id) {
