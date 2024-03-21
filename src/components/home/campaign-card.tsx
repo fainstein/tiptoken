@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { StoredCampaign } from "@/types/campaign";
+import { CampaignWithOwner, StoredCampaign } from "@/types/campaign";
 import {
   Box,
   Button,
@@ -17,13 +17,20 @@ import { useScopedI18n } from "@/locales/client";
 import theme from "@/ui/theme/theme";
 import { trimAddress } from "@/utils/address";
 
-const StyledCampaignCard = styled(Box).attrs({ boxShadow: 4 })`
+const StyledCampaignCard = styled(Box).attrs({ boxShadow: 7 })`
   border: 1px solid ${"#edeef6"};
   border-radius: ${theme.spacing(4)};
   padding: ${theme.spacing(4)};
+  display: flex;
+  flex-direction: column;
+  gap: ${theme.spacing(4)};
+  transition: box-shadow 300ms;
+  &:hover {
+    box-shadow: ${theme.shadows[4]};
+  }
 `;
 
-const CampaignCard = ({ campaign }: { campaign: StoredCampaign }) => {
+const CampaignCard = ({ campaign }: { campaign: CampaignWithOwner }) => {
   const t = useScopedI18n("campaign.card");
 
   return (
@@ -48,25 +55,6 @@ const CampaignCard = ({ campaign }: { campaign: StoredCampaign }) => {
         <Typography variant="caption">{campaign.description}</Typography>
       )}
       <Box display="flex" gap={10}>
-        <Box display="flex" flexDirection="column">
-          <Typography variant="body1">{t("received")}</Typography>
-          <Box display="flex" gap={1} alignItems="center">
-            <Typography variant="body2" fontWeight={500}>
-              {campaign.totalReceived}
-            </Typography>
-            <Image
-              alt="cafe-crypto-unit"
-              src={CafeCrypto}
-              width={24}
-              height={24}
-            />
-            {campaign.totalReceived * campaign.cafeCryptoUnit > 0 && (
-              <Typography variant="body2">
-                (${campaign.totalReceived * campaign.cafeCryptoUnit})
-              </Typography>
-            )}
-          </Box>
-        </Box>
         <Box display="flex" flexDirection="column">
           <Typography
             variant="body1"
@@ -93,9 +81,28 @@ const CampaignCard = ({ campaign }: { campaign: StoredCampaign }) => {
           <Typography variant="body1">{t("createdby")}</Typography>
           <Tooltip title={campaign.owner}>
             <Typography variant="body2" fontWeight={500}>
-              {trimAddress({ address: campaign.owner })}
+              {campaign.user_name || trimAddress({ address: campaign.owner })}
             </Typography>
           </Tooltip>
+        </Box>
+      </Box>
+      <Box display="flex" flexDirection="column">
+        <Typography variant="body1">{t("received")}</Typography>
+        <Box display="flex" gap={1} alignItems="center">
+          <Typography variant="body2" fontWeight={500}>
+            {campaign.totalReceived}
+          </Typography>
+          <Image
+            alt="cafe-crypto-unit"
+            src={CafeCrypto}
+            width={24}
+            height={24}
+          />
+          {campaign.totalReceived * campaign.cafeCryptoUnit > 0 && (
+            <Typography variant="body2">
+              (${campaign.totalReceived * campaign.cafeCryptoUnit})
+            </Typography>
+          )}
         </Box>
       </Box>
       {campaign.goalCC && (

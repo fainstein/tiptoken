@@ -1,23 +1,25 @@
 "use client";
 import React from "react";
-import { useAccount } from "wagmi";
 import ConnectWalletModal from "./connect-wallet-modal";
-import { Button } from "@mui/material";
-import { trimAddress } from "@/utils/address";
+import { Button, Typography } from "@mui/material";
+import { useScopedI18n } from "@/locales/client";
 
 const ConnectWalletButton = () => {
-  const { isConnected, isConnecting, address } = useAccount();
   const [openConnectModal, setOpenConnectModal] = React.useState(false);
-
+  const t = useScopedI18n("navigation");
   return (
     <>
       <ConnectWalletModal
         open={openConnectModal}
         setOpen={(shouldOpen) => setOpenConnectModal(shouldOpen)}
       />
-      <Button onClick={() => setOpenConnectModal(true)}>
-        {isConnected && address ? trimAddress({ address }) : "Connect"}
-      </Button>
+      <Typography
+        sx={{ cursor: "pointer" }}
+        variant="body1"
+        onClick={() => setOpenConnectModal(true)}
+      >
+        {t("connect")}
+      </Typography>
     </>
   );
 };
