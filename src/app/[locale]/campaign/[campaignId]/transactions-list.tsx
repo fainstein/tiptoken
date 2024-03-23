@@ -4,6 +4,7 @@ import { StoredCamapignTransaction } from "@/types/db";
 import { trimAddress } from "@/utils/address";
 import {
   Box,
+  Link,
   Paper,
   Table,
   TableBody,
@@ -16,6 +17,8 @@ import {
 import Image from "next/image";
 import CafeCrypto from "@/../public/CafeCrypto.png";
 import { DateTime } from "luxon";
+import { OpenInNew } from "@mui/icons-material";
+import { getExplorerTransactionUrl } from "@/utils/transactions";
 
 const TransactionsList = async ({
   campaignId,
@@ -57,6 +60,7 @@ const TransactionsList = async ({
                   </TableCell>
                   <TableCell sx={{ textAlign: "center" }}>USD</TableCell>
                   <TableCell></TableCell>
+                  <TableCell></TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -79,6 +83,17 @@ const TransactionsList = async ({
                       <Typography variant="body1">
                         {DateTime.fromJSDate(tx.created_at).toRelative()}
                       </Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Link
+                        href={`${getExplorerTransactionUrl(tx.chain_id)}${
+                          tx.hash
+                        }`}
+                        target="_blank"
+                        display="flex"
+                      >
+                        <OpenInNew />
+                      </Link>
                     </TableCell>
                   </TableRow>
                 ))}

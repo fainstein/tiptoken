@@ -7,5 +7,6 @@ export async function getTransactions(campaignId: number) {
     .selectFrom("campaign_transactions")
     .selectAll("campaign_transactions")
     .where("campaign_id", "=", campaignId)
+    .orderBy("campaign_transactions.created_at desc")
     .execute();
 }

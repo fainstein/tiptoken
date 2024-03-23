@@ -54,7 +54,7 @@ export default async function Campaign({
   return (
     <Box display="flex" gap={12} flexDirection="column">
       <Typography variant="h3">Support this campaign</Typography>
-      <Grid container columnSpacing={10}>
+      <Grid container columnSpacing={10} wrap="wrap-reverse">
         <Grid item xs={12} sm={5}>
           <Suspense fallback={<CircularProgress />}>
             <TransactionsList
