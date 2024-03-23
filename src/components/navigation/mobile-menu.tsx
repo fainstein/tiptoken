@@ -12,34 +12,12 @@ import NextLink from "next/link";
 import LocaleSwitch from "./locale-switcher";
 import ConnectWalletButton from "../connect-wallet";
 
-const MobileMenu = () => {
-  const [user, setUser] = React.useState<StoredUser | undefined>();
+const MobileMenu = ({ user }: { user?: StoredUser }) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const t = useScopedI18n("navigation");
   const account = useAccount();
   const { disconnect } = useDisconnect();
-  const asd = useReconnect();
-
-  React.useEffect(() => {
-    const fetchUser = async () => {
-      if (account.address) {
-        try {
-          const response = await fetch(`/api/get-user/${account.address}`);
-          const data = await response.json();
-
-          if (data.status === 404) {
-            throw new Error(data.message);
-          }
-
-          setUser(data);
-        } catch (e) {
-          console.error(e);
-        }
-      }
-    };
-    fetchUser();
-  }, [account.address]);
 
   const handleClose = () => {
     setAnchorEl(null);

@@ -8,7 +8,6 @@ type Params = {
 
 export async function GET(request: Request, context: { params: Params }) {
   try {
-    console.log("PARAMS", context.params.address);
     const user = await getUserByAddress(context.params.address);
 
     return NextResponse.json({

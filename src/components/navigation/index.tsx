@@ -7,13 +7,37 @@ import { ContainerBox } from "@/ui/components/container-box";
 import Image from "next/image";
 import CafeCrypto from "../../../public/CafeCrypto.png";
 import LocaleSwitcher from "./locale-switcher";
-import { useI18n } from "@/locales/client";
+import { useI18n, useScopedI18n } from "@/locales/client";
 import theme from "@/ui/theme/theme";
 import MobileMenu from "./mobile-menu";
+import { useAccount } from "wagmi";
+import { StoredUser } from "@/types/db";
 
 const Navigation = () => {
-  const t = useI18n();
+  const [user, setUser] = React.useState<StoredUser | undefined>();
+  const t = useScopedI18n("navigation");
   const mobile = useMediaQuery(theme.breakpoints.down("md"));
+  const account = useAccount();
+
+  React.useEffect(() => {
+    const fetchUser = async () => {
+      if (account.address) {
+        try {
+          const response = await fetch(`/api/get-user/${account.address}`);
+          const data = await response.json();
+
+          if (data.status === 404) {
+            throw new Error(data.message);
+          }
+
+          setUser(data);
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    };
+    fetchUser();
+  }, [account.address]);
 
   return (
     <Box
@@ -37,12 +61,17 @@ const Navigation = () => {
         </Box>
       </Link>
       {mobile ? (
-        <MobileMenu />
+        <MobileMenu user={user} />
       ) : (
         <ContainerBox alignItems="center" gap={6}>
           <Button variant="contained" href="/create" LinkComponent={NextLink}>
             {t("create")}
           </Button>
+          {user && (
+            <Link component={NextLink} href={`/users/${user.user_id}`}>
+              <Typography variant="body1">{t("profile")}</Typography>
+            </Link>
+          )}
           <ConnectWalletButton />
           <LocaleSwitcher />
         </ContainerBox>
