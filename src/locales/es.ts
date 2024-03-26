@@ -12,4 +12,5 @@ export default {
   "navigation.disconnect": "Desconectar",
   "navigation.create": "Crear",
   "navigation.profile": "Perfil",
+  "support.campaign.contribute": "Contribuir",
 } as const;

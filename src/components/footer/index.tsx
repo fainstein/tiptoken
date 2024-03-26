@@ -10,6 +10,7 @@ const Footer = () => {
       display="flex"
       gap={2}
       justifyContent="center"
+      paddingTop={10}
     >
       <IconButton
         LinkComponent={NextLink}
