@@ -23,10 +23,11 @@ import { useAccount, useWalletClient } from "wagmi";
 import useTokenBalance from "@/hooks/useTokenBalance";
 import { useSnackbar } from "notistack";
 import usewalletService from "@/hooks/services/useWalletService";
-import { parseUnits } from "viem";
+import { maxUint256, maxUint72, parseUnits } from "viem";
 import { PostcampaignTransaction } from "@/types/transactions";
 import { tokenList } from "@/constants/tokenList";
 import { useRouter } from "next/navigation";
+import { useScopedI18n } from "@/locales/client";
 
 const amountRegex = RegExp(/^[1-9]\d*$/);
 
@@ -87,12 +88,18 @@ const SupportCampaignForm = ({
     token,
     walletAddress: account.address,
   });
+  const t = useScopedI18n("support.campaign");
 
-  const ccUsdValue = +ccAmount * campaign.cafeCryptoUnit;
+  const ccUsdValue = Number(ccAmount || 0) * campaign.cafeCryptoUnit;
   const tokenValue =
     token && tokenPrices && tokenPrices[token.address]
       ? ccUsdValue / tokenPrices[token.address]
       : undefined;
+
+  const parsedAmount = parseUnits(
+    tokenValue?.toString() || "0",
+    token.decimals
+  );
 
   const handleNetworkChange = React.useCallback(
     (chainId: number) => {
@@ -114,9 +121,18 @@ const SupportCampaignForm = ({
       setCcAmount("");
     }
 
-    const parsedAmount = newAmount.replace(/,/g, ".");
-    if (amountRegex.test(parsedAmount.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))) {
-      setCcAmount(parsedAmount);
+    if (
+      Number(newAmount) > Number(maxUint72) ||
+      Number(newAmount || 0) * campaign.cafeCryptoUnit > Number(maxUint72)
+    ) {
+      return;
+    }
+
+    const santizedAmount = newAmount.replace(/,/g, ".");
+    if (
+      amountRegex.test(santizedAmount.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
+    ) {
+      setCcAmount(santizedAmount);
     }
   };
 
@@ -125,11 +141,6 @@ const SupportCampaignForm = ({
     title: string;
     onClick?: () => Promise<void>;
   }>(() => {
-    const parsedAmount = parseUnits(
-      tokenValue?.toString() || "0",
-      token.decimals
-    );
-
     if (!account.address) {
       return { disabled: true, title: "Connect wallet" };
     } else if (parsedAmount > balance) {
@@ -146,21 +157,17 @@ const SupportCampaignForm = ({
 
     return { disabled: false, title: "Send" };
   }, [
-    account,
-    walletClient,
+    account.address,
+    parsedAmount,
     balance,
-    network,
-    token,
-    tokenValue,
+    walletClient.data?.chain.id,
+    network.chainId,
+    network.name,
     walletService,
   ]);
 
   const handleSupportCampaign = async () => {
     setIsLoading(true);
-    const parsedAmount = parseUnits(
-      tokenValue?.toString() || "0",
-      token.decimals
-    );
 
     if (!account.address || parsedAmount > balance) {
       return;
@@ -208,14 +215,8 @@ const SupportCampaignForm = ({
   };
 
   return (
-    <Box
-      component="form"
-      display="flex"
-      flexDirection="column"
-      gap={3}
-      maxWidth="sm"
-    >
-      <Typography variant="body1">Sending to {campaign.owner}</Typography>
+    <Box component="form" display="flex" flexDirection="column" gap={3}>
+      <Typography variant="h5">{t("contribute")}</Typography>
       <NetworkSelector
         value={network}
         onChange={handleNetworkChange}
@@ -273,6 +274,10 @@ const SupportCampaignForm = ({
       >
         {isLoading ? <CircularProgress /> : btnState.title}
       </Button>
+      <Typography variant="body1" textAlign="center">
+        Sending {tokenValue ? `${tokenValue.toFixed(2)} ${token.symbol}` : ""}{" "}
+        to {campaign.owner}
+      </Typography>
     </Box>
   );
 };

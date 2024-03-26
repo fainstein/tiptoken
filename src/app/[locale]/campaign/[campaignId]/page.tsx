@@ -53,17 +53,9 @@ export default async function Campaign({
 
   return (
     <Box display="flex" gap={12} flexDirection="column">
-      <Typography variant="h3">Support this campaign</Typography>
-      <Grid container columnSpacing={10} wrap="wrap-reverse">
-        <Grid item xs={12} sm={5}>
-          <Suspense fallback={<CircularProgress />}>
-            <TransactionsList
-              campaignId={campaign.campaignId}
-              ccUnit={campaign.cafeCryptoUnit}
-            />
-          </Suspense>
-        </Grid>
-        <Grid item xs={12} sm={7}>
+      <Typography variant="h4">{campaign.name}</Typography>
+      <Grid container rowSpacing={10} justifyContent="center">
+        <Grid item xs={12} sm={8}>
           <SupportCampaignForm
             campaign={campaign}
             handleGetTokensPrices={handleGetTokensPrices}
@@ -72,6 +64,14 @@ export default async function Campaign({
             defaultNetwork={defaultNetwork}
             defaultToken={defaultToken}
           />
+        </Grid>
+        <Grid item xs={12} sm={8}>
+          <Suspense fallback={<CircularProgress />}>
+            <TransactionsList
+              campaignId={campaign.campaignId}
+              ccUnit={campaign.cafeCryptoUnit}
+            />
+          </Suspense>
         </Grid>
       </Grid>
     </Box>

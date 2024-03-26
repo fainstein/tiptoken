@@ -1,7 +1,7 @@
 "use client";
 import { locales } from "@/middleware";
 import { useChangeLocale, useCurrentLocale } from "@/locales/client";
-import { MenuItem, Select } from "@mui/material";
+import { Box, MenuItem, Select } from "@mui/material";
 
 interface LocaleSwitcherProps {
   onClose?: () => void;

@@ -55,7 +55,7 @@ const MobileMenu = ({ user }: { user?: StoredUser }) => {
             <ConnectWalletButton />
           </MenuItem>
         )}
-        <MenuItem>
+        <MenuItem disableTouchRipple>
           <LocaleSwitch onClose={handleClose} />
         </MenuItem>
       </Menu>
