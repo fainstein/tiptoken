@@ -1,4 +1,4 @@
-import { getTransactions } from "@/app/api/transactions/getTransactions";
+import { getTransactions } from "@/app/actions/transactions/getTransactions";
 import { getI18n } from "@/locales/server";
 import { StoredCamapignTransaction } from "@/types/db";
 import { trimAddress } from "@/utils/address";

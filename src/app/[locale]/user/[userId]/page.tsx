@@ -1,13 +1,13 @@
-import { getUser } from "@/app/api/user/getUser";
+import { getUser } from "@/app/actions/user/getUser";
 import NewUserForm from "../new-user-form";
 import { redirect } from "next/navigation";
 import { Box, Typography } from "@mui/material";
 import { User } from "@/types/user";
-import { updateUser } from "@/app/api/user/updateUser";
+import { updateUser } from "@/app/actions/user/updateUser";
 import { UpdateUser } from "@/types/requests";
 import { trimAddress } from "@/utils/address";
 import { Address } from "viem";
-import { getUserCampaigns } from "@/app/api/campaign/getCampaigns";
+import { getUserCampaigns } from "@/app/actions/campaign/getCampaigns";
 
 const updateUserAction = async (user: UpdateUser) => {
   "use server";

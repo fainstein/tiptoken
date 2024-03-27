@@ -1,11 +1,11 @@
-import { getCampaign } from "@/app/api/campaign/getCampaigns";
+import { getCampaign } from "@/app/actions/campaign/getCampaigns";
 import SupportCampaignForm from "./support-campaign-form";
 import { Box, CircularProgress, Grid, Typography } from "@mui/material";
 import { NetworkList, TokenAddress } from "@/types/ethereum";
-import { getTokenPrices } from "@/app/api/defillama/getTokenPrices";
+import { getTokenPrices } from "@/app/actions/defillama/getTokenPrices";
 import { networkList } from "@/constants/networks";
 import { redirect } from "next/navigation";
-import { postCampaignTransaction } from "@/app/api/transactions/postCampaignTransaction";
+import { postCampaignTransaction } from "@/app/actions/transactions/postCampaignTransaction";
 import { PostcampaignTransaction } from "@/types/transactions";
 import { tokenList } from "@/constants/tokenList";
 import TransactionsList from "./transactions-list";

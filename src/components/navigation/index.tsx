@@ -7,37 +7,46 @@ import { ContainerBox } from "@/ui/components/container-box";
 import Image from "next/image";
 import CafeCrypto from "../../../public/CafeCrypto.png";
 import LocaleSwitcher from "./locale-switcher";
-import { useI18n, useScopedI18n } from "@/locales/client";
+import { useScopedI18n } from "@/locales/client";
 import theme from "@/ui/theme/theme";
 import MobileMenu from "./mobile-menu";
 import { useAccount } from "wagmi";
 import { StoredUser } from "@/types/db";
+import axios from "axios";
+import { BaseResponse, GetUserByAddressResponse } from "@/types/requests";
+import { Address, isAddressEqual } from "viem";
 
 const Navigation = () => {
   const [user, setUser] = React.useState<StoredUser | undefined>();
   const t = useScopedI18n("navigation");
   const mobile = useMediaQuery(theme.breakpoints.down("md"));
   const account = useAccount();
+  const previousAddressRef = React.useRef<Address>();
 
   React.useEffect(() => {
     const fetchUser = async () => {
-      if (account.address) {
+      if (
+        account.isConnected &&
+        account.address?.toLowerCase() !==
+          previousAddressRef.current?.toLowerCase()
+      ) {
         try {
-          const response = await fetch(`/api/get-user/${account.address}`);
-          const data = await response.json();
-
-          if (data.status === 404) {
-            throw new Error(data.message);
+          previousAddressRef.current = account.address;
+          const response = await axios<GetUserByAddressResponse>(
+            `/api/user/${account.address?.toLowerCase()}`
+          );
+          if (response.data.status === 404) {
+            throw new Error(response.data.message);
           }
 
-          setUser(data);
+          setUser(response.data.user);
         } catch (e) {
           console.error(e);
         }
       }
     };
     fetchUser();
-  }, [account.address]);
+  }, [account.address, account.isConnected]);
 
   return (
     <Box
@@ -68,7 +77,7 @@ const Navigation = () => {
             {t("create")}
           </Button>
           {user && (
-            <Link component={NextLink} href={`/users/${user.user_id}`}>
+            <Link component={NextLink} href={`/user/${user.user_id}`}>
               <Typography variant="body1">{t("profile")}</Typography>
             </Link>
           )}

@@ -1,5 +1,5 @@
 import { Box, Grid, Typography } from "@mui/material";
-import { getOpenCampaigns } from "../api/campaign/getCampaigns";
+import { getOpenCampaigns } from "../actions/campaign/getCampaigns";
 import CampaignCard from "../../components/home/campaign-card";
 import { getI18n } from "@/locales/server";
 
