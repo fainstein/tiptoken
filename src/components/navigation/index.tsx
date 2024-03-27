@@ -23,7 +23,7 @@ const Navigation = () => {
     const fetchUser = async () => {
       if (account.address) {
         try {
-          const response = await fetch(`/api/get-user/${account.address}`);
+          const response = await fetch(`/api/user/${account.address}`);
           const data = await response.json();
 
           if (data.status === 404) {

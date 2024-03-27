@@ -1,5 +1,5 @@
 import { Address } from "viem";
-import { getUserByAddress } from "../../user/getUser";
+import { getUserByAddress } from "../../../../actions/user/getUser";
 import { NextResponse } from "next/server";
 
 type Params = {
