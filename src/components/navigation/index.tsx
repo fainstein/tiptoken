@@ -13,8 +13,9 @@ import MobileMenu from "./mobile-menu";
 import { useAccount } from "wagmi";
 import { StoredUser } from "@/types/db";
 import axios from "axios";
-import { BaseResponse, GetUserByAddressResponse } from "@/types/requests";
-import { Address, isAddressEqual } from "viem";
+import { GetUserByAddressResponse } from "@/types/requests";
+import { Address } from "viem";
+import CCLogo from "@/ui/images/cc-logo";
 
 const Navigation = () => {
   const [user, setUser] = React.useState<StoredUser | undefined>();
@@ -58,12 +59,7 @@ const Navigation = () => {
     >
       <Link href="/" component={NextLink}>
         <Box display="flex" gap={2} alignItems="center">
-          <Image
-            width={40}
-            height={40}
-            src={CafeCrypto}
-            alt="cafe-crypto-logo"
-          />
+          <CCLogo size={40} />
           <Typography variant="h4" display={mobile ? "none" : ""}>
             CafeCrypto
           </Typography>
@@ -77,7 +73,7 @@ const Navigation = () => {
             {t("create")}
           </Button>
           {user && (
-            <Link component={NextLink} href={`/user/${user.user_id}`}>
+            <Link component={NextLink} href={`/user`}>
               <Typography variant="body1">{t("profile")}</Typography>
             </Link>
           )}

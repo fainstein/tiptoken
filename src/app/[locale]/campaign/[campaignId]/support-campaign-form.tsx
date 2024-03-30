@@ -17,8 +17,6 @@ import { StoredCampaign } from "@/types/campaign";
 import NetworkSelector from "@/components/network-selector/network-selector";
 import { Network, Token, TokenAddress, TokenPrices } from "@/types/ethereum";
 import TokenSelector from "@/components/token-selector/token-selector";
-import Image from "next/image";
-import CafeCrypto from "@/../public/CafeCrypto.png";
 import { useAccount, useWalletClient } from "wagmi";
 import useTokenBalance from "@/hooks/useTokenBalance";
 import { useSnackbar } from "notistack";
@@ -28,6 +26,7 @@ import { PostcampaignTransaction } from "@/types/transactions";
 import { tokenList } from "@/constants/tokenList";
 import { useRouter } from "next/navigation";
 import { useScopedI18n } from "@/locales/client";
+import CCLogo from "@/ui/images/cc-logo";
 
 const amountRegex = RegExp(/^[1-9]\d*$/);
 
@@ -235,12 +234,7 @@ const SupportCampaignForm = ({
           placeholder="☕ to send"
           endAdornment={
             <InputAdornment position="end">
-              <Image
-                alt="cafe-crypto-unit"
-                src={CafeCrypto}
-                width={24}
-                height={24}
-              />
+              <CCLogo />
             </InputAdornment>
           }
           value={ccAmount}

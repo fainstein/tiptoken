@@ -124,7 +124,7 @@ export default class WalletService {
 
   async getWalletVerifyingSignature() {
     const walletClient = await getWalletClient(config);
-    const message = `CafeCrypto wants you to sign in with you Ethereum account:\r\n${
+    const message = `Please verify ownership for this account:\r\n${
       walletClient.account.address
     }.\r\n\r\nIssued at: ${DateTime.now()}`;
 

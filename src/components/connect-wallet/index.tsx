@@ -8,8 +8,15 @@ import { trimAddress } from "@/utils/address";
 
 const ConnectWalletButton = () => {
   const [openConnectModal, setOpenConnectModal] = React.useState(false);
-  const { isConnected, address } = useAccount();
+  const { isConnected: isConnectedWagmi, address } = useAccount();
+  const [isConnected, setIsConnected] = React.useState(false);
   const t = useScopedI18n("navigation");
+
+  React.useEffect(() => {
+    // This way to update state, after components are rendered, solves a hydration issue
+    setIsConnected(true);
+  }, [isConnectedWagmi]);
+
   return (
     <>
       <ConnectWalletModal

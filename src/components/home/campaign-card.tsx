@@ -16,6 +16,7 @@ import { styled } from "styled-components";
 import { useScopedI18n } from "@/locales/client";
 import theme from "@/ui/theme/theme";
 import { trimAddress } from "@/utils/address";
+import CCLogo from "@/ui/images/cc-logo";
 
 const StyledCampaignCard = styled(Box).attrs({ boxShadow: 7 })`
   border: 1px solid ${"#edeef6"};
@@ -63,14 +64,7 @@ const CampaignCard = ({ campaign }: { campaign: CampaignWithOwner }) => {
             gap={1}
           >
             {t("value", {
-              img: (
-                <Image
-                  alt="cafe-crypto-unit"
-                  src={CafeCrypto}
-                  width={24}
-                  height={24}
-                />
-              ),
+              img: <CCLogo />,
             })}
           </Typography>
           <Typography variant="body2" fontWeight={500}>
@@ -92,12 +86,7 @@ const CampaignCard = ({ campaign }: { campaign: CampaignWithOwner }) => {
           <Typography variant="body2" fontWeight={500}>
             {campaign.totalReceived}
           </Typography>
-          <Image
-            alt="cafe-crypto-unit"
-            src={CafeCrypto}
-            width={24}
-            height={24}
-          />
+          <CCLogo />
           {campaign.totalReceived * campaign.cafeCryptoUnit > 0 && (
             <Typography variant="body2">
               (${campaign.totalReceived * campaign.cafeCryptoUnit})
@@ -117,12 +106,8 @@ const CampaignCard = ({ campaign }: { campaign: CampaignWithOwner }) => {
           />
           <Box display="flex" gap={1} alignItems="center" justifyContent="end">
             <Typography variant="body1">Goal: {campaign.goalCC}</Typography>
-            <Image
-              alt="cafe-crypto-unit"
-              src={CafeCrypto}
-              width={24}
-              height={24}
-            />
+            <CCLogo />
+
             <Typography variant="body1">
               (${campaign.goalCC * campaign.cafeCryptoUnit})
             </Typography>

@@ -15,10 +15,10 @@ import {
   Typography,
 } from "@mui/material";
 import Image from "next/image";
-import CafeCrypto from "@/../public/CafeCrypto.png";
 import { DateTime } from "luxon";
 import { OpenInNew } from "@mui/icons-material";
 import { getExplorerTransactionUrl } from "@/utils/transactions";
+import CCLogo from "@/ui/images/cc-logo";
 
 const TransactionsList = async ({
   campaignId,
@@ -35,12 +35,7 @@ const TransactionsList = async ({
       <Typography variant="h5">{t("cc.received")}</Typography>
       {transactions.length === 0 ? (
         <Box display="flex" gap={2} alignItems="center" justifyContent="center">
-          <Image
-            alt="cafe-crypto-unit"
-            src={CafeCrypto}
-            width={24}
-            height={24}
-          />
+          <CCLogo />
           <Typography variant="body1">{t("tx.no.transactions")} 🤑</Typography>
         </Box>
       ) : (
@@ -50,12 +45,7 @@ const TransactionsList = async ({
               <TableRow>
                 <TableCell>{t("tx.from")}</TableCell>
                 <TableCell sx={{ textAlign: "center" }}>
-                  <Image
-                    alt="cafe-crypto-unit"
-                    src={CafeCrypto}
-                    width={24}
-                    height={24}
-                  />
+                  <CCLogo />
                 </TableCell>
                 <TableCell sx={{ textAlign: "center" }}>USD</TableCell>
                 <TableCell></TableCell>
