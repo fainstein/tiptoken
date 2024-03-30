@@ -41,7 +41,7 @@ const MobileMenu = ({ user }: { user?: StoredUser }) => {
         </MenuItem>
         {user && (
           <MenuItem LinkComponent={Link}>
-            <Link href={`/users/${user.user_id}`}>
+            <Link href={`/user`}>
               <Typography variant="body1">{t("profile")}</Typography>
             </Link>
           </MenuItem>

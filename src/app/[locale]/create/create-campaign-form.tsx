@@ -113,7 +113,7 @@ const CreateCampaignForm = ({
             <Button
               variant="contained"
               LinkComponent={Link}
-              href={`/user/${user.id}`}
+              href={`/user`}
             >
               Tell contributors about yourself!
             </Button>

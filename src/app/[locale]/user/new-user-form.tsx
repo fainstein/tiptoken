@@ -10,6 +10,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useSnackbar } from "notistack";
+import { useScopedI18n } from "@/locales/client";
 
 interface NewUserFormProps {
   userId: number;
@@ -21,6 +22,7 @@ const NewUserForm = ({ userId, updateUser }: NewUserFormProps) => {
   const [isLoading, setIsLoading] = React.useState(false);
   const [success, setSuccess] = React.useState(false);
   const snackbar = useSnackbar();
+  const t = useScopedI18n("user");
 
   if (success) {
     return;
@@ -53,10 +55,15 @@ const NewUserForm = ({ userId, updateUser }: NewUserFormProps) => {
       gap={3}
       maxWidth="sm"
     >
-      <Typography variant="h4">Let people know more about yourself</Typography>
+      <Box display="flex" flexDirection="column" gap={2}>
+        <Typography variant="h5" textAlign="center">
+          {t("personal-info")}
+        </Typography>
+        <Typography variant="body2">{t("personal-info-reason")}</Typography>
+      </Box>
       <TextField
         id="userName"
-        placeholder="How do people call you?"
+        placeholder={t("personal.name.placeholder")}
         value={name}
         onChange={(e) => setName(e.target.value)}
       />
@@ -66,7 +73,7 @@ const NewUserForm = ({ userId, updateUser }: NewUserFormProps) => {
         onClick={handleUpdateUser}
         disabled={isLoading || !name}
       >
-        {isLoading ? <CircularProgress /> : "Update your information"}
+        {isLoading ? <CircularProgress /> : t("personal.submit")}
       </Button>
     </Box>
   );
