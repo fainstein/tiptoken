@@ -1,16 +1,15 @@
-import { BaseCampaign } from "../../../types/campaign";
-import { getCampaignCreator } from "./getCampaignCreator";
-import { NewUser, User } from "../../../types/user";
 import { db } from "@/lib/kysely";
+import { BaseCampaign } from "@/types/campaign";
+import { User } from "@/types/user";
 import { revalidatePath } from "next/cache";
 
 export async function postCampaign(campaign: BaseCampaign): Promise<{
   campaign_id: number;
-  creator: NewUser | User;
+  creator: User;
 }> {
   const existingUser = await db
     .selectFrom("users")
-    .select("user_id")
+    .select(["user_id", "name"])
     .where("address", "=", campaign.owner)
     .executeTakeFirst();
 
@@ -66,11 +65,12 @@ export async function postCampaign(campaign: BaseCampaign): Promise<{
 
   revalidatePath("/");
 
-  if (!existingUser) {
-    return { campaign_id, creator: { user_id, address: campaign.owner } };
-  }
-
-  const creator = await getCampaignCreator(user_id);
-
-  return { campaign_id, creator };
+  return {
+    campaign_id,
+    creator: {
+      user_id,
+      address: campaign.owner,
+      name: existingUser?.name || undefined,
+    },
+  };
 }
