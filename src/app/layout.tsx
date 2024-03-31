@@ -16,7 +16,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={poppins.className} style={{ margin: 0 }}>
+      <body
+        className={poppins.className}
+        style={{
+          margin: 0,
+          minHeight: "100vh",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+        }}
+      >
         <StyledComponentsRegistry>{children}</StyledComponentsRegistry>
       </body>
     </html>

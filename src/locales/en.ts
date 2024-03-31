@@ -1,5 +1,6 @@
 export default {
-  "open.cafecryptos": "Open CafeCryptos",
+  "home.topcc": "Top CafeCryptos",
+  "home.recentcc": "Recently added",
   create: "Create",
   "cc.received": "CafeCryptos received",
   "tx.from": "From",
