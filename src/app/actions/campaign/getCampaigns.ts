@@ -8,6 +8,7 @@ import { getUser } from "../user/getUser";
 import { db } from "@/lib/kysely";
 import { StoredCampaignAllowedChains } from "@/types/db";
 import { getCampaignAllowedChains } from "./getCampaignAllowedTokens";
+import { sql } from "kysely";
 
 const getCampaignExtraData = async (
   campaignId: number,
@@ -21,10 +22,7 @@ const getCampaignExtraData = async (
   return { allowedChains, ownerAddress: user.address };
 };
 
-export async function getOpenCampaigns(
-  start = 0
-): Promise<CampaignWithOwner[]> {
-
+export const getRecentCampaigns = async (): Promise<CampaignWithOwner[]> => {
   const campaigns = await db
     .selectFrom("campaigns")
     .innerJoin("users", "users.user_id", "campaigns.user_id")
@@ -42,10 +40,8 @@ export async function getOpenCampaigns(
       "users.address as user_address",
       "users.name as user_name",
     ])
-    .where("is_open", "=", true)
-    .orderBy("created_at")
-    .limit(20)
-    .offset(start)
+    .orderBy("created_at", "desc")
+    .limit(12)
     .execute();
 
   return campaigns.map(
@@ -78,7 +74,61 @@ export async function getOpenCampaigns(
       description,
     })
   );
-}
+};
+
+export const getPopularCampaigns = async (): Promise<CampaignWithOwner[]> => {
+  const campaigns = await db
+    .selectFrom("campaigns")
+    .innerJoin("users", "users.user_id", "campaigns.user_id")
+    .select([
+      "campaign_id",
+      "campaigns.name as campaign_name",
+      "cafe_crypto_unit",
+      "goal_cc",
+      "end_date",
+      "campaigns.user_id",
+      "total_received",
+      "is_open",
+      "description",
+      "created_at",
+      "users.address as user_address",
+      "users.name as user_name",
+    ])
+    .orderBy(sql`campaigns.cafe_crypto_unit * campaigns.total_received`, "desc")
+    .limit(12)
+    .execute();
+
+  return campaigns.map(
+    ({
+      campaign_id,
+      created_at,
+      is_open,
+      campaign_name,
+      total_received,
+      end_date,
+      goal_cc,
+      cafe_crypto_unit,
+      user_id,
+      description,
+      user_address,
+      user_name,
+    }) => ({
+      allowedChainIds: [],
+      campaignId: campaign_id,
+      createdAt: created_at,
+      isOpen: is_open,
+      name: campaign_name,
+      totalReceived: total_received,
+      endDate: end_date,
+      cafeCryptoUnit: cafe_crypto_unit,
+      goalCC: goal_cc,
+      owner: user_address,
+      user_name: user_name,
+      userId: user_id,
+      description,
+    })
+  );
+};
 
 export async function getCampaign(
   campaignId: number

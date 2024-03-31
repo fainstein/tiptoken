@@ -22,7 +22,6 @@ export default function RootLayout({
         <Grid
           component="main"
           container
-          minHeight="calc(100vh - 130px)"
           px={{ xs: 5, md: 10 }}
         >
           <Grid item xs={12}>
