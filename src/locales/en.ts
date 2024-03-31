@@ -24,4 +24,17 @@ export default {
   "user.personal.name.placeholder": "How do people call you?",
   "user.personal.edit": "Update your information",
   "user.personal.save": "Save",
+  "create.title": "Create your CafeCrypto",
+  "create.form.button.connect": "Connect wallet",
+  "create.form.button.no-chains": "You must select at least one network",
+  "create.form.button.sign": "Sign & Create",
+  "create.form.ccname": "Name",
+  "create.form.ccvalue": "{img} value",
+  "create.form.ccvalue-helper":
+    "This is the minimum amount you will receive for each contribution",
+  "create.form.goal": "Goal (optional)",
+  "create.form.goal-helper": "Your goal: {goal} USD",
+  "create.form.description": "Description (optional)",
+  "create.form.network": "Allowed networks",
+  "create.form.error": "We couldn't create your CafeCrypto. Please try again",
 } as const;

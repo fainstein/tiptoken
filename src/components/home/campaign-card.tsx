@@ -26,6 +26,7 @@ const StyledCampaignCard = styled(Box).attrs({ boxShadow: 7 })`
   flex-direction: column;
   gap: ${theme.spacing(4)};
   transition: box-shadow 300ms;
+  flex: 1;
   &:hover {
     box-shadow: ${theme.shadows[4]};
   }
@@ -52,9 +53,6 @@ const CampaignCard = ({ campaign }: { campaign: CampaignWithOwner }) => {
           </Button>
         </Link>
       </Box>
-      {campaign.description && (
-        <Typography variant="caption">{campaign.description}</Typography>
-      )}
       <Box display="flex" gap={10}>
         <Box display="flex" flexDirection="column">
           <Typography
@@ -94,6 +92,9 @@ const CampaignCard = ({ campaign }: { campaign: CampaignWithOwner }) => {
           )}
         </Box>
       </Box>
+      {campaign.description && (
+        <Typography variant="caption">{campaign.description}</Typography>
+      )}
       {campaign.goalCC && (
         <>
           <LinearProgress

@@ -3,10 +3,7 @@ import { BaseCampaign } from "@/types/campaign";
 import { User } from "@/types/user";
 import { revalidatePath } from "next/cache";
 
-export async function postCampaign(campaign: BaseCampaign): Promise<{
-  campaign_id: number;
-  creator: User;
-}> {
+export async function postCampaign(campaign: BaseCampaign): Promise<number> {
   const existingUser = await db
     .selectFrom("users")
     .select(["user_id", "name"])
@@ -64,13 +61,7 @@ export async function postCampaign(campaign: BaseCampaign): Promise<{
     .execute();
 
   revalidatePath("/");
+  revalidatePath("/user");
 
-  return {
-    campaign_id,
-    creator: {
-      user_id,
-      address: campaign.owner,
-      name: existingUser?.name || undefined,
-    },
-  };
+  return campaign_id;
 }

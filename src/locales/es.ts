@@ -24,4 +24,18 @@ export default {
   "user.personal.name.placeholder": "¿Cómo te llama la gente?",
   "user.personal.edit": "Actualizar tu información",
   "user.personal.save": "Guardar",
+  "create.title": "Crea tu CafeCrypto",
+  "create.form.button.connect": "Conectar billetera",
+  "create.form.button.no-chains": "Debes seleccionar al menos una red",
+  "create.form.button.sign": "Firmar & Crear",
+  "create.form.ccname": "Nombre",
+  "create.form.ccvalue": "valor de {img}",
+  "create.form.ccvalue-helper":
+    "Esta es la cantidad mínima que recibirás por cada contribución",
+  "create.form.goal": "Meta (opcional)",
+  "create.form.goal-helper": "Tu meta: {goal} USD",
+  "create.form.description": "Descripción (opcional)",
+  "create.form.network": "Redes permitidas",
+  "create.form.error":
+    "No hemos podido crear tu CafeCrypto. Por favor intenta nuevamente",
 } as const;
