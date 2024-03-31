@@ -20,8 +20,7 @@ export default {
   "snackbar.no-user-found":
     "No existe usuario para tu dirección. Crea tu CafeCrypto para tener una página personal",
   "user.personal-info": "Información personal",
-  "user.personal-info-reason":
-    "Cuentale a la gente sobre tí y ayúdales a contactarte",
   "user.personal.name.placeholder": "¿Cómo te llama la gente?",
-  "user.personal.submit": "Actualizar tu información",
+  "user.personal.edit": "Actualizar tu información",
+  "user.personal.save": "Guardar",
 } as const;

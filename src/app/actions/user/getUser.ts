@@ -1,6 +1,8 @@
 import { db } from "@/lib/kysely";
-import { StoredUser } from "@/types/db";
+import { StoredSocialMediaLinks, StoredUser } from "@/types/db";
+import { User } from "@/types/user";
 import { Address } from "viem";
+import { transformUserWithSocial } from "../transform/user";
 
 export async function getUser(userId: number): Promise<StoredUser> {
   const user = await db
@@ -20,4 +22,23 @@ export async function getUserByAddress(address: Address): Promise<StoredUser> {
     .executeTakeFirstOrThrow();
 
   return user;
+}
+
+async function getUserSocialLinks(
+  userId: number
+): Promise<StoredSocialMediaLinks[]> {
+  const socials = await db
+    .selectFrom("social_media_links")
+    .selectAll()
+    .where("user_id", "=", userId)
+    .execute();
+
+  return socials;
+}
+
+export async function getUserWithSocial(address: Address): Promise<User> {
+  const user = await getUserByAddress(address);
+  const socials = await getUserSocialLinks(user.user_id);
+
+  return transformUserWithSocial(user, socials);
 }

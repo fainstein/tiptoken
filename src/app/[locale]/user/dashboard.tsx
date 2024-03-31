@@ -6,27 +6,29 @@ import {
   Box,
   Button,
   CircularProgress,
+  Grid,
   Paper,
   Typography,
 } from "@mui/material";
-import { Address, recoverMessageAddress } from "viem";
-import NewUserForm from "./new-user-form";
+import { Address } from "viem";
+import UpdateUserForm from "./update-user-form";
 import { GetUserCampaignsResponse, UpdateUser } from "@/types/requests";
 import React from "react";
 import useWalletService from "@/hooks/services/useWalletService";
 import { StoredCampaign } from "@/types/campaign";
 import axios from "axios";
-import CampaignData from "@/components/user/campaign-data";
-import { useI18n, useScopedI18n } from "@/locales/client";
+import { useI18n } from "@/locales/client";
 import { useRouter } from "next/navigation";
 import { useSnackbar } from "notistack";
+import CampaignsList from "./campaigns-list";
+import { User } from "@/types/user";
 
 interface DashboardProps {
   updateUserAction: (user: UpdateUser) => Promise<void>;
 }
 
 const Dashboard = ({ updateUserAction }: DashboardProps) => {
-  const [user, setUser] = React.useState<StoredUser | null>(null);
+  const [user, setUser] = React.useState<User | null>(null);
   const [campaigns, setCampaigns] = React.useState<StoredCampaign[]>([]);
   const [isLoading, setIsLoading] = React.useState(false);
   const isNewUser = !user?.name;
@@ -87,27 +89,24 @@ const Dashboard = ({ updateUserAction }: DashboardProps) => {
   }
 
   return (
-    <Box display="flex" flexDirection="column">
+    <Box display="flex" flexDirection="column" gap={12}>
       <Typography variant="h5" textAlign="right">
         {isNewUser
           ? trimAddress({ address: user?.address as Address, trimSize: 6 })
           : user.name}
       </Typography>
-
-      {isNewUser && (
-        <Box
-          display="flex"
-          width="100%"
-          flexDirection="column"
-          alignItems="center"
-        >
-          <NewUserForm userId={user.user_id} updateUser={updateUserAction} />
-        </Box>
-      )}
-      <Typography variant="h5">{t("user.yourcc")}</Typography>
-      {campaigns.map((campaign) => (
-        <CampaignData campaign={campaign} key={campaign.campaignId} />
-      ))}
+      <Grid container columnSpacing={12}>
+        <Grid item xs={12} md={4}>
+          <UpdateUserForm
+            user={user}
+            setUser={setUser}
+            updateUser={updateUserAction}
+          />
+        </Grid>
+        <Grid item xs={12} md={8}>
+          <CampaignsList campaigns={campaigns} />
+        </Grid>
+      </Grid>
     </Box>
   );
 };

@@ -6,9 +6,9 @@ export interface NewUser {
   address: Address;
 }
 
-type UserSocial = Partial<Record<ValidPlatforms, string>>;
+export type UserSocial = Partial<Record<ValidPlatforms, string>>;
 
 export interface User extends NewUser {
-  name: string;
+  name?: string;
   socialLinks?: UserSocial;
 }

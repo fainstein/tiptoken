@@ -12,7 +12,6 @@ export const components: Components = {
   MuiPaper: {
     styleOverrides: {
       root: {
-        padding: "32px",
         borderRadius: "12px",
       },
     },
