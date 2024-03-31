@@ -4,7 +4,9 @@ import { User } from "./user";
 import { StoredUser } from "./db";
 import { StoredCampaign } from "./campaign";
 
-export type UpdateUser = Omit<User, "address">;
+export type UpdateUser = Omit<User, "address" | "name"> & {
+  name: string;
+};
 
 type TokenKey = `${string}:${TokenAddress}`;
 
@@ -31,5 +33,5 @@ export interface GetUserByAddressResponse extends BaseResponse {
 
 export interface GetUserCampaignsResponse extends BaseResponse {
   campaigns?: StoredCampaign[];
-  user: StoredUser | null;
+  user: User | null;
 }

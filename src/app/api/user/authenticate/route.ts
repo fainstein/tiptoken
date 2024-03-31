@@ -2,7 +2,7 @@ import { Address, recoverMessageAddress } from "viem";
 import { NextResponse } from "next/server";
 import { type NextRequest } from "next/server";
 import { GetUserCampaignsResponse } from "@/types/requests";
-import { getUser, getUserByAddress } from "@/app/actions/user/getUser";
+import { getUserWithSocial } from "@/app/actions/user/getUser";
 import { getUserCampaigns } from "@/app/actions/campaign/getCampaigns";
 
 type SearchParams = {
@@ -29,7 +29,7 @@ export async function GET(
 
   try {
     const userAddress = await recoverMessageAddress({ message, signature });
-    const user = await getUserByAddress(userAddress.toLowerCase() as Address);
+    const user = await getUserWithSocial(userAddress.toLowerCase() as Address);
     const campaigns = await getUserCampaigns(user.user_id);
 
     return NextResponse.json({

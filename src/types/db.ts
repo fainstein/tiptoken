@@ -50,11 +50,16 @@ export enum ValidPlatforms {
   YOUTUBE = "youtube",
 }
 
-export interface SocialMediaLinksRow {
-  link_id: number;
+export interface SocialMediaLinksTable {
+  link_id: Generated<number>;
   user_id: number;
   platform: `${ValidPlatforms}`;
-  username: string;
+  url: string;
+}
+
+export interface StoredSocialMediaLinks
+  extends Omit<SocialMediaLinksTable, "link_id"> {
+  link_id: number;
 }
 
 export interface CampaignTransactionsTable {
