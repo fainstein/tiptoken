@@ -21,7 +21,7 @@ import { useAccount, useWalletClient } from "wagmi";
 import useTokenBalance from "@/hooks/useTokenBalance";
 import { useSnackbar } from "notistack";
 import usewalletService from "@/hooks/services/useWalletService";
-import { maxUint256, maxUint72, parseUnits } from "viem";
+import { maxUint72, parseUnits } from "viem";
 import { PostcampaignTransaction } from "@/types/transactions";
 import { tokenList } from "@/constants/tokenList";
 import { useRouter } from "next/navigation";

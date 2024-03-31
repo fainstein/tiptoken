@@ -3,6 +3,8 @@ import CreateCampaignForm from "./create-campaign-form";
 import { NewCampaign } from "../../../types/campaign";
 import { postCampaign } from "../../actions/campaign/postCampaign";
 import { Address, verifyMessage } from "viem";
+import { getI18n } from "@/locales/server";
+import { redirect } from "next/navigation";
 
 async function handlePostCampaign({
   signature,
@@ -30,7 +32,7 @@ async function handlePostCampaign({
   }
 
   try {
-    const { campaign_id, creator } = await postCampaign({
+    const campaign_id = await postCampaign({
       allowedChainIds,
       name,
       endDate,
@@ -39,8 +41,7 @@ async function handlePostCampaign({
       owner: owner.toLowerCase() as Address,
       description,
     });
-
-    return { campaignId: campaign_id.toString(), creator };
+    return campaign_id;
   } catch (e) {
     console.error(e);
     throw new Error(
@@ -49,10 +50,11 @@ async function handlePostCampaign({
   }
 }
 
-export default function Create() {
+export default async function Create() {
+  const t = await getI18n();
   return (
-    <Box display="flex" gap={12} flexDirection="column">
-      <Typography variant="h3">Create campaign</Typography>
+    <Box display="flex" gap={12} flexDirection="column" alignItems="center">
+      <Typography variant="h4">{t("create.title")}</Typography>
       <CreateCampaignForm handlePostCampaign={handlePostCampaign} />
     </Box>
   );

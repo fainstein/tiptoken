@@ -17,7 +17,14 @@ export default async function Home() {
         <Typography variant="h5">{t("home.topcc")}</Typography>
         <Grid container spacing={3}>
           {popularCampaigns.map((campaign) => (
-            <Grid item key={campaign.campaignId} xs={12} md={6} lg={4}>
+            <Grid
+              item
+              key={campaign.campaignId}
+              xs={12}
+              md={6}
+              lg={4}
+              display="flex"
+            >
               <CampaignCard campaign={campaign} />
             </Grid>
           ))}
@@ -27,7 +34,14 @@ export default async function Home() {
         <Typography variant="h5">{t("home.recentcc")}</Typography>
         <Grid container spacing={3}>
           {recentCampaigns.map((campaign) => (
-            <Grid item key={campaign.campaignId} xs={12} md={6} lg={4}>
+            <Grid
+              item
+              key={campaign.campaignId}
+              xs={12}
+              md={6}
+              lg={4}
+              display="flex"
+            >
               <CampaignCard campaign={campaign} />
             </Grid>
           ))}
