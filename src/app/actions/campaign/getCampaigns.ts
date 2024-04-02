@@ -3,12 +3,13 @@ import {
   OpenCampaign,
   StoredCampaign,
 } from "@/types/campaign";
-import { transformCampaigns } from "../transform/campaign";
+import { transformCampaigns } from "../../transform/campaign";
 import { getUser } from "../user/getUser";
 import { db } from "@/lib/kysely";
 import { StoredCampaignAllowedChains } from "@/types/db";
 import { getCampaignAllowedChains } from "./getCampaignAllowedTokens";
 import { sql } from "kysely";
+import { redirect } from "next/navigation";
 
 const getCampaignExtraData = async (
   campaignId: number,
@@ -39,6 +40,7 @@ export const getRecentCampaigns = async (): Promise<CampaignWithOwner[]> => {
       "created_at",
       "users.address as user_address",
       "users.name as user_name",
+      "title",
     ])
     .orderBy("created_at", "desc")
     .limit(12)
@@ -58,6 +60,7 @@ export const getRecentCampaigns = async (): Promise<CampaignWithOwner[]> => {
       description,
       user_address,
       user_name,
+      title,
     }) => ({
       allowedChainIds: [],
       campaignId: campaign_id,
@@ -72,6 +75,7 @@ export const getRecentCampaigns = async (): Promise<CampaignWithOwner[]> => {
       user_name: user_name,
       userId: user_id,
       description,
+      title,
     })
   );
 };
@@ -93,6 +97,7 @@ export const getPopularCampaigns = async (): Promise<CampaignWithOwner[]> => {
       "created_at",
       "users.address as user_address",
       "users.name as user_name",
+      "title",
     ])
     .orderBy(sql`campaigns.cafe_crypto_unit * campaigns.total_received`, "desc")
     .limit(12)
@@ -112,6 +117,7 @@ export const getPopularCampaigns = async (): Promise<CampaignWithOwner[]> => {
       description,
       user_address,
       user_name,
+      title,
     }) => ({
       allowedChainIds: [],
       campaignId: campaign_id,
@@ -126,34 +132,35 @@ export const getPopularCampaigns = async (): Promise<CampaignWithOwner[]> => {
       user_name: user_name,
       userId: user_id,
       description,
+      title,
     })
   );
 };
 
-export async function getCampaign(
-  campaignId: number
-): Promise<StoredCampaign | undefined> {
-  const campaign = await db
-    .selectFrom("campaigns")
-    .selectAll()
-    .where("campaign_id", "=", campaignId)
-    .executeTakeFirst();
+export async function getCampaignByName(
+  campaignName: string
+): Promise<StoredCampaign> {
+  try {
+    const campaign = await db
+      .selectFrom("campaigns")
+      .selectAll()
+      .where("name", "=", campaignName)
+      .executeTakeFirstOrThrow();
 
-  if (!campaign) {
-    return;
+    const { campaign_id, user_id } = campaign;
+    const { allowedChains, ownerAddress } = await getCampaignExtraData(
+      campaign_id,
+      user_id
+    );
+
+    return transformCampaigns({
+      campaigns: [campaign],
+      allowedChains,
+      ownerAddress,
+    })[0];
+  } catch (e) {
+    redirect("/");
   }
-
-  const { campaign_id, user_id } = campaign;
-  const { allowedChains, ownerAddress } = await getCampaignExtraData(
-    campaign_id,
-    user_id
-  );
-
-  return transformCampaigns({
-    campaigns: [campaign],
-    allowedChains,
-    ownerAddress,
-  })[0];
 }
 
 export async function getUserCampaigns(

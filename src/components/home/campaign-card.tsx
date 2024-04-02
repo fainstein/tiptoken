@@ -45,7 +45,7 @@ const CampaignCard = ({ campaign }: { campaign: CampaignWithOwner }) => {
           variant="h4"
           component={NextLink}
           color="inherit"
-          href={`/campaign/${campaign.campaignId}`}
+          href={`/campaign/${campaign.name}`}
           display="flex"
         >
           <Button variant="contained" color="secondary">

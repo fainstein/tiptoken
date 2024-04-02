@@ -8,6 +8,7 @@ export interface BaseCampaign {
   endDate: Date | null;
   owner: Address;
   description: string;
+  title: string;
 }
 
 export interface OpenCampaign extends BaseCampaign {

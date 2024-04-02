@@ -4,7 +4,6 @@ import { NewCampaign } from "../../../types/campaign";
 import { postCampaign } from "../../actions/campaign/postCampaign";
 import { Address, verifyMessage } from "viem";
 import { getI18n } from "@/locales/server";
-import { redirect } from "next/navigation";
 
 async function handlePostCampaign({
   signature,
@@ -16,6 +15,7 @@ async function handlePostCampaign({
   owner,
   description,
   message,
+  title,
 }: NewCampaign) {
   "use server";
 
@@ -32,16 +32,17 @@ async function handlePostCampaign({
   }
 
   try {
-    const campaign_id = await postCampaign({
+    const campaginName = await postCampaign({
       allowedChainIds,
-      name,
+      title,
+      name: name.replace(/\s/g, ""),
       endDate,
       cafeCryptoUnit,
       goalCC,
       owner: owner.toLowerCase() as Address,
       description,
     });
-    return campaign_id;
+    return campaginName;
   } catch (e) {
     console.error(e);
     throw new Error(
