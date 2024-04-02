@@ -26,6 +26,7 @@ export const transformCampaigns = ({
       cafe_crypto_unit,
       user_id,
       description,
+      title,
     }) => {
       const allowedChainIds = allowedChains
         .filter(
@@ -47,6 +48,7 @@ export const transformCampaigns = ({
         owner: ownerAddress as Address,
         userId: user_id,
         description,
+        title,
       };
     }
   );

@@ -2,7 +2,7 @@ import { db } from "@/lib/kysely";
 import { StoredSocialMediaLinks, StoredUser } from "@/types/db";
 import { User } from "@/types/user";
 import { Address } from "viem";
-import { transformUserWithSocial } from "../transform/user";
+import { transformUserWithSocial } from "../../transform/user";
 
 export async function getUser(userId: number): Promise<StoredUser> {
   const user = await db

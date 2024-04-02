@@ -1,6 +1,6 @@
 import { TokenAddress, TokenPrices } from "@/types/ethereum";
 import { DefiLlamaGetPrices } from "@/types/requests";
-import { transformTokenPrices } from "../transform/tokenPrices";
+import { transformTokenPrices } from "../../transform/tokenPrices";
 
 const DEFILLAMA_BASE_URL = "https://coins.llama.fi";
 

@@ -1,15 +1,22 @@
-import { getCampaign } from "@/app/actions/campaign/getCampaigns";
+import { getCampaignByName } from "@/app/actions/campaign/getCampaigns";
 import SupportCampaignForm from "./support-campaign-form";
-import { Box, CircularProgress, Grid, Typography } from "@mui/material";
-import { NetworkList, TokenAddress } from "@/types/ethereum";
+import {
+  Box,
+  CircularProgress,
+  Grid,
+  IconButton,
+  Typography,
+} from "@mui/material";
+import { TokenAddress } from "@/types/ethereum";
 import { getTokenPrices } from "@/app/actions/defillama/getTokenPrices";
 import { networkList } from "@/constants/networks";
-import { redirect } from "next/navigation";
 import { postCampaignTransaction } from "@/app/actions/transactions/postCampaignTransaction";
 import { PostcampaignTransaction } from "@/types/transactions";
 import { tokenList } from "@/constants/tokenList";
 import TransactionsList from "./transactions-list";
 import { Suspense } from "react";
+import { Share } from "@mui/icons-material";
+import ShareButton from "@/ui/components/share-btn";
 
 const handleGetTokensPrices = async ({
   networkName,
@@ -37,13 +44,9 @@ const handlePostCampaignTransaction = async (
 export default async function Campaign({
   params,
 }: {
-  params: { campaignId: string };
+  params: { name: string };
 }) {
-  const campaign = await getCampaign(Number(params.campaignId));
-
-  if (!campaign) {
-    redirect("/");
-  }
+  const campaign = await getCampaignByName(params.name);
 
   const allowedNetworks = Object.values(networkList).filter((network) =>
     campaign.allowedChainIds.includes(network.chainId)
@@ -53,7 +56,10 @@ export default async function Campaign({
 
   return (
     <Box display="flex" gap={12} flexDirection="column">
-      <Typography variant="h4">{campaign.name}</Typography>
+      <Box display="flex" gap={8} alignItems="center">
+        <Typography variant="h4">{campaign.title || campaign.name}</Typography>
+        <ShareButton textToCopy={`cafecrypto.com/${campaign.name}`} />
+      </Box>
       <Grid container rowSpacing={10} justifyContent="center">
         <Grid item xs={12} sm={8}>
           <SupportCampaignForm

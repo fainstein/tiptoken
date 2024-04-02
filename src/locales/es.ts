@@ -20,6 +20,7 @@ export default {
     "Debes firmar un mensaje para ver tu página personal (¡es gratis!)",
   "snackbar.no-user-found":
     "No existe usuario para tu dirección. Crea tu CafeCrypto para tener una página personal",
+  "snackbar.coppied": "{message} ha sido copiado",
   "user.personal-info": "Información personal",
   "user.personal.name.placeholder": "¿Cómo te llama la gente?",
   "user.personal.edit": "Actualizar tu información",
@@ -29,6 +30,7 @@ export default {
   "create.form.button.no-chains": "Debes seleccionar al menos una red",
   "create.form.button.sign": "Firmar & Crear",
   "create.form.ccname": "Nombre",
+  "create.form.cctitle": "Título (opcional)",
   "create.form.ccvalue": "valor de {img}",
   "create.form.ccvalue-helper":
     "Esta es la cantidad mínima que recibirás por cada contribución",

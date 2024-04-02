@@ -24,7 +24,7 @@ import MultipleSelectNetwork from "./multiple-select-network";
 import { useRouter } from "next/navigation";
 
 interface CreateCampaignFormProps {
-  handlePostCampaign: (campaign: NewCampaign) => Promise<number>;
+  handlePostCampaign: (campaign: NewCampaign) => Promise<string>;
 }
 
 const CreateCampaignForm = ({
@@ -34,6 +34,7 @@ const CreateCampaignForm = ({
     Object.keys(networkList)
   );
   const [name, setName] = React.useState("");
+  const [title, setTitle] = React.useState("");
   const [goalCC, setGoalCC] = React.useState("");
   const [CCValue, setCCValue] = React.useState("");
   const [isLoading, setIsLoading] = React.useState(false);
@@ -70,10 +71,10 @@ const CreateCampaignForm = ({
 
     try {
       const { signature, message } =
-        await walletService.getWalletVerifyingSignature();
+      await walletService.getWalletVerifyingSignature();
       setIsLoading(true);
 
-      const campaignId = await handlePostCampaign({
+      const campaignName = await handlePostCampaign({
         name,
         allowedChainIds,
         signature,
@@ -83,8 +84,9 @@ const CreateCampaignForm = ({
         description,
         endDate: null,
         message,
+        title,
       });
-      router.push(`/campaign/${campaignId}`);
+      router.push(`/campaign/${campaignName}`);
     } catch (e) {
       console.error(e);
       snackbar.enqueueSnackbar({
@@ -118,6 +120,14 @@ const CreateCampaignForm = ({
           onChange={(e) => setName(e.target.value.replace(/\s/g, ""))}
         />
         <FormHelperText>cafecrypto.com/{name.toLowerCase()}</FormHelperText>
+      </FormControl>
+      <FormControl variant="outlined">
+        <TextField
+          id="campaignTitle"
+          label={t("cctitle")}
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
       </FormControl>
       <MultipleSelectNetwork
         selectedChains={selectedChains}

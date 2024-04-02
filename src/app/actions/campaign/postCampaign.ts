@@ -1,30 +1,10 @@
 import { db } from "@/lib/kysely";
 import { BaseCampaign } from "@/types/campaign";
-import { User } from "@/types/user";
 import { revalidatePath } from "next/cache";
+import { createUser } from "../user/createUser";
 
-export async function postCampaign(campaign: BaseCampaign): Promise<number> {
-  const existingUser = await db
-    .selectFrom("users")
-    .select(["user_id", "name"])
-    .where("address", "=", campaign.owner)
-    .executeTakeFirst();
-
-  let user_id: number | undefined;
-  if (!existingUser) {
-    const newUser = await db
-      .insertInto("users")
-      .values({ address: campaign.owner })
-      .returning("user_id")
-      .executeTakeFirst();
-    user_id = newUser?.user_id;
-  } else {
-    user_id = existingUser.user_id;
-  }
-
-  if (!user_id) {
-    throw new Error("Unable to create user");
-  }
+export async function postCampaign(campaign: BaseCampaign): Promise<string> {
+  const user_id = await createUser(campaign.owner);
 
   // Insert campaign
 
@@ -32,6 +12,7 @@ export async function postCampaign(campaign: BaseCampaign): Promise<number> {
     .insertInto("campaigns")
     .values({
       name: campaign.name,
+      title: campaign.title,
       cafe_crypto_unit: campaign.cafeCryptoUnit,
       goal_cc: campaign.goalCC || null,
       user_id,
@@ -39,14 +20,14 @@ export async function postCampaign(campaign: BaseCampaign): Promise<number> {
       is_open: true,
       total_received: 0,
     })
-    .returning("campaign_id")
+    .returning(["name", "campaign_id"])
     .executeTakeFirst();
 
   if (!returnedCampaign) {
     throw new Error("Unable to create campaign");
   }
 
-  const campaign_id = returnedCampaign.campaign_id;
+  const { campaign_id, name } = returnedCampaign;
 
   const allowedChainsValues = campaign.allowedChainIds.map((chain_id) => ({
     campaign_id,
@@ -63,5 +44,5 @@ export async function postCampaign(campaign: BaseCampaign): Promise<number> {
   revalidatePath("/");
   revalidatePath("/user");
 
-  return campaign_id;
+  return name;
 }

@@ -13,6 +13,7 @@ export interface CampaignsTable {
   is_open: boolean;
   created_at: Generated<Date>;
   description: string;
+  title: string;
 }
 
 export type CampaignsTableReturnType = Omit<
