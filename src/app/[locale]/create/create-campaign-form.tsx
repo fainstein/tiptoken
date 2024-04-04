@@ -22,6 +22,10 @@ import { Address } from "viem";
 import CCLogo from "@/ui/images/cc-logo";
 import MultipleSelectNetwork from "./multiple-select-network";
 import { useRouter } from "next/navigation";
+import useDebounce from "@/hooks/useDebounce";
+import axios from "axios";
+import { GetCampaignNameValidation } from "@/types/requests";
+import { CheckCircleRounded, ErrorRounded } from "@mui/icons-material";
 
 interface CreateCampaignFormProps {
   handlePostCampaign: (campaign: NewCampaign) => Promise<string>;
@@ -45,10 +49,34 @@ const CreateCampaignForm = ({
   const snackbar = useSnackbar();
   const t = useScopedI18n("create.form");
   const router = useRouter();
+  const [isNameAvailable, setIsNameAvailable] =
+    React.useState<GetCampaignNameValidation["isValid"]>(null);
+  const { debouncedValue: debouncedName } = useDebounce(name, 3000);
+  const [isLoadingNameValidation, setIsLoadingNameValidation] =
+    React.useState(false);
 
   React.useEffect(() => {
     setOwner(wagmiAddress);
   }, [wagmiAddress]);
+
+  React.useEffect(() => {
+    const validateName = async () => {
+      if (debouncedName) {
+        const validation = await axios<GetCampaignNameValidation>(
+          "api/campaign-name",
+          {
+            params: {
+              name: debouncedName,
+            },
+          }
+        );
+        setIsNameAvailable(validation.data.isValid);
+      }
+      setIsLoadingNameValidation(false);
+    };
+
+    validateName();
+  }, [debouncedName]);
 
   const btnState = React.useMemo<{ disabled: boolean; title: string }>(() => {
     if (!owner) {
@@ -71,7 +99,7 @@ const CreateCampaignForm = ({
 
     try {
       const { signature, message } =
-      await walletService.getWalletVerifyingSignature();
+        await walletService.getWalletVerifyingSignature();
       setIsLoading(true);
 
       const campaignName = await handlePostCampaign({
@@ -104,6 +132,24 @@ const CreateCampaignForm = ({
     }
   };
 
+  const handleNameChange = (newValue: string) => {
+    if (newValue !== name) {
+      setIsLoadingNameValidation(!!newValue);
+      setName(newValue);
+      setIsNameAvailable(null);
+    }
+  };
+
+  const validationResult = isLoadingNameValidation ? (
+    <CircularProgress />
+  ) : isNameAvailable === null ? (
+    <></>
+  ) : isNameAvailable ? (
+    <CheckCircleRounded />
+  ) : (
+    <ErrorRounded />
+  );
+
   return (
     <Box
       component="form"
@@ -117,9 +163,17 @@ const CreateCampaignForm = ({
           id="campaignName"
           label={t("ccname")}
           value={name}
-          onChange={(e) => setName(e.target.value.replace(/\s/g, ""))}
+          onChange={(e) => handleNameChange(e.target.value.replace(/\s/g, ""))}
+          InputProps={{
+            endAdornment: validationResult,
+          }}
+          error={isNameAvailable === false}
         />
-        <FormHelperText>cafecrypto.com/{name.toLowerCase()}</FormHelperText>
+        <FormHelperText>
+          {isNameAvailable === false
+            ? t("ccname.notavailable")
+            : `cafecrypto.com/${name.toLowerCase()}`}
+        </FormHelperText>
       </FormControl>
       <FormControl variant="outlined">
         <TextField

@@ -30,6 +30,8 @@ export default {
   "create.form.button.no-chains": "You must select at least one network",
   "create.form.button.sign": "Sign & Create",
   "create.form.ccname": "Name",
+  "create.form.ccname.notavailable":
+    "This name is not available, please choose a different one",
   "create.form.cctitle": "Title (optional)",
   "create.form.ccvalue": "{img} value",
   "create.form.ccvalue-helper":

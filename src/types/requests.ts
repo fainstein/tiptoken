@@ -35,3 +35,7 @@ export interface GetUserCampaignsResponse extends BaseResponse {
   campaigns?: StoredCampaign[];
   user: User | null;
 }
+
+export interface GetCampaignNameValidation extends BaseResponse {
+  isValid: boolean | null;
+}
