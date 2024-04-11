@@ -150,6 +150,9 @@ const CreateCampaignForm = ({
     <ErrorRounded />
   );
 
+  const disableFormControls =
+    isLoadingNameValidation || isNameAvailable === false;
+
   return (
     <Box
       component="form"
@@ -181,11 +184,13 @@ const CreateCampaignForm = ({
           label={t("cctitle")}
           value={title}
           onChange={(e) => setTitle(e.target.value)}
+          disabled={disableFormControls}
         />
       </FormControl>
       <MultipleSelectNetwork
         selectedChains={selectedChains}
         setSelectedChains={setSelectedChains}
+        disabled={disableFormControls}
       />
       <FormControl variant="outlined">
         <InputLabel
@@ -205,6 +210,7 @@ const CreateCampaignForm = ({
           endAdornment={<InputAdornment position="end">USD</InputAdornment>}
           value={CCValue}
           onChange={(e) => handleCcValueChange(e.target.value)}
+          disabled={disableFormControls}
         />
         <FormHelperText>{t("ccvalue-helper")}</FormHelperText>
       </FormControl>
@@ -221,6 +227,7 @@ const CreateCampaignForm = ({
           }
           value={goalCC}
           onChange={(e) => setGoalCC(e.target.value.replace(/[^0-9]/g, ""))}
+          disabled={disableFormControls}
         />
         {goalCC && (
           <FormHelperText>
@@ -237,12 +244,13 @@ const CreateCampaignForm = ({
         rows={4}
         value={description}
         onChange={(e) => setDescription(e.target.value)}
+        disabled={disableFormControls}
       />
       <Button
         variant="contained"
         size="large"
         onClick={handleCreateCampaign}
-        disabled={isLoading || btnState.disabled}
+        disabled={isLoading || btnState.disabled || disableFormControls}
       >
         {isLoading ? <CircularProgress /> : btnState.title}
       </Button>

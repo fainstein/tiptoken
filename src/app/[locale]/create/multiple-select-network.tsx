@@ -17,11 +17,13 @@ import { useScopedI18n } from "@/locales/client";
 interface MultipleSelectNetworkProps {
   selectedChains: string[];
   setSelectedChains: React.Dispatch<React.SetStateAction<string[]>>;
+  disabled?: boolean;
 }
 
 const MultipleSelectNetwork = ({
   selectedChains,
   setSelectedChains,
+  disabled
 }: MultipleSelectNetworkProps) => {
   const t = useScopedI18n("create.form");
   const handleChange = (event: SelectChangeEvent<typeof selectedChains>) => {
@@ -50,6 +52,7 @@ const MultipleSelectNetwork = ({
             ))}
           </Box>
         )}
+        disabled={disabled}
       >
         {Object.values(networkList).map((chain) => (
           <MenuItem key={chain.chainId} value={chain.chainId.toString()}>
