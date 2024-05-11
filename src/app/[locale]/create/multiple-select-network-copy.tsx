@@ -1,6 +1,6 @@
-"use client";
+/* "use client";
 
-import * as React from "react";
+import React from "react";
 import {
   Box,
   Chip,
@@ -11,7 +11,6 @@ import {
   Select,
   SelectChangeEvent,
   Checkbox,
-  ListItemText,
 } from "@mui/material";
 import { networkList } from "../../../constants/networks";
 import { useScopedI18n } from "@/locales/client";
@@ -29,7 +28,7 @@ const MultipleSelectNetwork = ({
 }: MultipleSelectNetworkProps) => {
   const t = useScopedI18n("create.form");
   const handleChange = (event: SelectChangeEvent<typeof selectedChains>) => {
-    const selectedChain = event.target.value;
+    const selectedChain = event.target.value; 
     if (typeof selectedChain === "string") {
       return;
     }
@@ -40,13 +39,12 @@ const MultipleSelectNetwork = ({
     <FormControl variant="outlined">
       <InputLabel htmlFor="allowed-networks">{t("network")}</InputLabel>
       <Select
-        labelId="allowed-networks"
-        id="allowed-networks"
         multiple
         value={selectedChains}
         onChange={handleChange}
+        labelId="allowed-networks"
         variant="outlined"
-        input={<OutlinedInput label={t("network")} />}
+        input={<OutlinedInput id="allowed-networks" label={t("network")} />}
         renderValue={(selected) => (
           <Box display="flex" gap={0.5} flexWrap="wrap">
             {selected.map((chainId) => (
@@ -58,10 +56,7 @@ const MultipleSelectNetwork = ({
       >
         {Object.values(networkList).map((chain) => (
           <MenuItem key={chain.chainId} value={chain.chainId.toString()}>
-            <Checkbox
-              checked={selectedChains.indexOf(chain.chainId.toString()) > -1}
-            />
-            <ListItemText primary={`${chain.name}`} />
+            {chain.name}
           </MenuItem>
         ))}
       </Select>
@@ -70,3 +65,12 @@ const MultipleSelectNetwork = ({
 };
 
 export default MultipleSelectNetwork;
+
+/** <Checkbox
+value={selectedChains}
+onChange={handleChange}
+inputProps={{ "aria-label": "controlled" }}
+defaultChecked
+size="small"
+/>
+ */
