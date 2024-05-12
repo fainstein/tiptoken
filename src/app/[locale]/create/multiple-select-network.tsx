@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import * as React from "react";
 import {
   Box,
   Chip,
@@ -10,6 +10,8 @@ import {
   OutlinedInput,
   Select,
   SelectChangeEvent,
+  Checkbox,
+  ListItemText,
 } from "@mui/material";
 import { networkList } from "../../../constants/networks";
 import { useScopedI18n } from "@/locales/client";
@@ -23,7 +25,7 @@ interface MultipleSelectNetworkProps {
 const MultipleSelectNetwork = ({
   selectedChains,
   setSelectedChains,
-  disabled
+  disabled,
 }: MultipleSelectNetworkProps) => {
   const t = useScopedI18n("create.form");
   const handleChange = (event: SelectChangeEvent<typeof selectedChains>) => {
@@ -31,7 +33,6 @@ const MultipleSelectNetwork = ({
     if (typeof selectedChain === "string") {
       return;
     }
-
     setSelectedChains(selectedChain);
   };
 
@@ -39,12 +40,13 @@ const MultipleSelectNetwork = ({
     <FormControl variant="outlined">
       <InputLabel htmlFor="allowed-networks">{t("network")}</InputLabel>
       <Select
+        labelId="allowed-networks"
+        id="allowed-networks"
         multiple
         value={selectedChains}
         onChange={handleChange}
-        labelId="allowed-networks"
         variant="outlined"
-        input={<OutlinedInput id="allowed-networks" label={t("network")} />}
+        input={<OutlinedInput label={t("network")} />}
         renderValue={(selected) => (
           <Box display="flex" gap={0.5} flexWrap="wrap">
             {selected.map((chainId) => (
@@ -56,7 +58,10 @@ const MultipleSelectNetwork = ({
       >
         {Object.values(networkList).map((chain) => (
           <MenuItem key={chain.chainId} value={chain.chainId.toString()}>
-            {chain.name}
+            <Checkbox
+              checked={selectedChains.indexOf(chain.chainId.toString()) > -1}
+            />
+            <ListItemText primary={`${chain.name}`} />
           </MenuItem>
         ))}
       </Select>
